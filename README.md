@@ -14,6 +14,8 @@ The analysis presented in this section will then be used as a working example in
 
 N-tuples are at:
 
-```/var/pcjm/r02/lhcb/trisovic/Analysis``` and
+`/var/pcjm/r02/lhcb/trisovic/Analysis` 
 
-```/afs/cern.ch/work/a/atrisovi/public/Analysis```
+and
+
+`/afs/cern.ch/work/a/atrisovi/public/Analysis`

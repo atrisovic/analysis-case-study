@@ -9,3 +9,11 @@ Provide a case study that illustrates the main steps that LHCb analyses go throu
 5. User analysis (ntuple processing). 
 
 The analysis presented in this section will then be used as a working example in the following sections
+
+# Location
+
+N-tuples are at:
+
+```/var/pcjm/r02/lhcb/trisovic/Analysis``` and
+
+```/afs/cern.ch/work/a/atrisovi/public/Analysis```

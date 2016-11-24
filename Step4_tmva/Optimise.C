@@ -110,7 +110,8 @@ void Optimise()
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 
-  // Select m(mumu) range consistent with phi (normalisation channel)
+  // Select m(mumu) range consistent with phi (normalisation channel): 850 − 1250 MeV
+  // NB high-m(μ+ μ− ): 1250 − 2000 MeV
   //RooRealVar *MuMuMass = new RooRealVar("MuMuMass", "MuMuMass", 1000., 0., 1e6);
   //All_Data->addColumn(*MuMuMass);
   //for (int i=0; i<All_Data->numEntries(); i++){
@@ -118,9 +119,6 @@ void Optimise()
   //  All_Data->add(RooArgSet(*MuMuMass));
   //}
   
-  
-  // Create an output file
-  TFile fOutput("Results/Optimisation.root","recreate");   
   
   // Create simple model
   RooAddPdf *Model = CreateModel(D_MM);
@@ -138,11 +136,23 @@ void Optimise()
     
     // Perform the fit
     RooFitResult* FitResult = Fit_D2Pimumu_Mass(All_Data, Model, BDT_cut);
-    
+   
+    // Determine background in D+ signal window +/- 25 MeV around peak
+    D_MM->setRange("signal", 1869.62-25, 1869.62+25);
+    RooExponential* bkg_model = (RooExponential*)Model->pdfList().find("CombBG_PDF");
+    bkg_model->Print();
+    double B_norm = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*Model->getVariables()->getRealValue("nBkg");
+    double S_norm = Model->getVariables()->getRealValue("nSig");
+
+    // Assume phase space coefficient between m(mumu) regions only dependent on window size
+    double B_sig = B_norm * (2000-1250)/(1250-850);
+    // Scale signal yield by ratio of branching fractions of normalisation channel and expected BF in signal channel
+    // BF(D+ → π + (φ → μ+ μ− )) = (1.56±0.12)×10−6 (thesis page 80)
+    // SM prediction:  BF(D+ → π + μ+ μ− ) = 3.7×10−9 (thesis page 48)
+    double S_sig = S_norm * (3.7e-9)/(1.56e-6);
+
     // Use significance FoM S/sqrt(S+B)
-    // NB: Still need to scale signal yield by ratio of branching fractions of normalisation channel and expected BF in signal channel
-    // Also need to scale B according to m(mumu) range 
-    Significance_FoM[i] = Model->getVariables()->getRealValue("nSig")/sqrt(Model->getVariables()->getRealValue("nSig")+Model->getVariables()->getRealValue("nBkg"));
+    Significance_FoM[i] = S_sig/sqrt(S_sig+B_sig);
     BDT_cuts[i] = BDT_cut;
    
     BDT_cut = BDT_cut + BDT_increment;

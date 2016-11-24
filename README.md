@@ -19,3 +19,7 @@ N-tuples are at:
 and
 
 `/afs/cern.ch/work/a/atrisovi/public/Analysis`
+
+# ANA Note
+
+`https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf`

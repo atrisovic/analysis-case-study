@@ -11,3 +11,16 @@ SetupProject LHCbDirac
 lhcb-proxy-init 
 lhcb_bkk &
 ```
+
+# Running
+
+```SetupProject Ganga```
+
+Certificate: 
+`gridProxy.renew()`
+
+Submit the job:
+```
+ganga Ganga_Options_for_Ana.py
+```
+

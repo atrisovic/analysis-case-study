@@ -17,6 +17,7 @@ lhcb_bkk &
 ```SetupProject Ganga```
 
 Certificate: 
+`ganga` and then
 `gridProxy.renew()`
 
 Submit the job:

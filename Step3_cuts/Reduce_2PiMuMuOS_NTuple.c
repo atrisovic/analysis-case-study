@@ -396,9 +396,9 @@ void Main(TString sFile, TString sFolder, TString sTree) { //TString sOutput
    //Data->SetBranchStatus("muplus_P", 0);
    //Data->SetBranchStatus("muplus_PT", 0);
    Data->SetBranchStatus("muplus_PE", 0);
-   Data->SetBranchStatus("muplus_PX", 0);
-   Data->SetBranchStatus("muplus_PY", 0);
-   Data->SetBranchStatus("muplus_PZ", 0);
+   //Data->SetBranchStatus("muplus_PX", 0);
+   //Data->SetBranchStatus("muplus_PY", 0);
+   //Data->SetBranchStatus("muplus_PZ", 0);
    Data->SetBranchStatus("muplus_M", 0);
    Data->SetBranchStatus("muplus_ID", 0);/*
    Data->SetBranchStatus("muplus_PIDe", 0);
@@ -579,9 +579,9 @@ void Main(TString sFile, TString sFolder, TString sTree) { //TString sOutput
    /* Data->SetBranchStatus("muminus_P", 0); */
    /* Data->SetBranchStatus("muminus_PT", 0); */
    Data->SetBranchStatus("muminus_PE", 0);
-   Data->SetBranchStatus("muminus_PX", 0);
-   Data->SetBranchStatus("muminus_PY", 0);
-   Data->SetBranchStatus("muminus_PZ", 0);
+   //Data->SetBranchStatus("muminus_PX", 0);
+   //Data->SetBranchStatus("muminus_PY", 0);
+   //Data->SetBranchStatus("muminus_PZ", 0);
    Data->SetBranchStatus("muminus_M", 0);
    Data->SetBranchStatus("muminus_ID", 0);
    /* Data->SetBranchStatus("muminus_PIDe", 0); */

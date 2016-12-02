@@ -1,8 +1,3 @@
-# Running the scripts
-
-```
-execfile("Ganga_File.py")
-```
 # Bookkeeping
 
 ```
@@ -25,16 +20,35 @@ from Gaudi.Configuration import FileCatalog
 FileCatalog().Catalogs = [ "xmlcatalog_file:/path/to/myCatalog.xml" ]
 ```
 
-# Running
+# Running the scripts
 
-```SetupProject Ganga```
+```
+lhcb-proxy-init
+lb-run Ganga ganga Ganga_Options.py
+```
+
+Alternatively:
+
+`SetupProject Ganga` or `SetupGanga`
 
 Certificate: 
+`lhcb-proxy-init` or
+
 `ganga` and then
 `gridProxy.renew()`
 
 Submit the job:
 ```
-ganga Ganga_Options_for_Ana.py
+ganga Ganga_Options.py
 ```
+or inside `ganga`
+`execfile("Ganga_File.py")`
 
+# Fixing failed jobs
+
+In ganga:
+
+```j=jobs(PrimaryJobId)
+
+for sj in j.subjobs.select(status="failed"):
+      sj.backend.reset()```

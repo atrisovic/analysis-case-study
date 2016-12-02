@@ -10,6 +10,21 @@ Provide a case study that illustrates the main steps that LHCb analyses go throu
 
 The analysis presented in this section will then be used as a working example in the following sections
 
+# Decay modes
+
+```
+D+ -> K+ mu+ mu-
+D- -> K+ mu- mu-
+D+ -> pi+ mu+ mu-
+D- -> pi+ mu- mu-
+```
+
+# Data
+
+`LHCb Collision 11 Beam3500GeV-VeloClosed-MagDownRealData Reco14 Stripping21r1 90000000 CHARMMDST`
+
+`LHCb Collision 12 Beam4000GeV-VeloClosed-MagDownRealData Reco14 Stripping21 90000000 CHARMMDST`
+
 # Location
 
 N-tuples are at:

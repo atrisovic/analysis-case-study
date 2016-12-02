@@ -4,6 +4,8 @@ import GaudiKernel.SystemOfUnits as Units
 
 from Gaudi.Configuration import *
 
+FileCatalog().Catalogs = [ "xmlcatalog_file:/afs/cern.ch/work/a/atrisovi/analysis-case-study/Step1_getdata/MagDown-11/myCatalog.xml" ]
+
 from Configurables import DaVinci
 
 # ANA - these three lines are the locations of the candidates produced by three different stripping lines. You should modify these to include four(?) lines we discussed yesterday. You will need to find the exact name of the stripping lines from the stripping code.
@@ -151,8 +153,8 @@ D2PimumuSSTuple.P2PVInputLocations = ["Phys/D2XMuMu_PiSSLine/Particle2VertexRela
 # 2) Run within DaVinci                                                 
 #----------------------------------------
 
-magPol = "Up" # This is the magnet polarity of the data - there will be magnet up and magnet down sample in the book-keeping. Change this when you run over different datasets
-year = "12" # This specifies the year the data was taken in. It should match the data set you are running over.
+magPol = "Down" # This is the magnet polarity of the data - there will be magnet up and magnet down sample in the book-keeping. Change this when you run over different datasets
+year = "11" # This specifies the year the data was taken in. It should match the data set you are running over.
 
 DaVinci().RootInTES = rootInTes
 DaVinci().TupleFile     = "Stripping21r1_D2HMuMu"+year+"_Mag"+magPol+"_NTuples.root" # This is the name of the ntuple file that gets produced. You should change this to something more appropriate. It automatically includes the year and magnet polarity in the name.

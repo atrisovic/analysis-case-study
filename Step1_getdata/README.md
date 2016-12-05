@@ -46,9 +46,20 @@ or inside `ganga`
 
 # Fixing failed jobs
 
-In ganga:
+Identify failed jobs: `jobs(ID).subjobs`
+Resubmit them: jobs(ID).subjobs(subjobID).resubmit()
 
-```j=jobs(PrimaryJobId)
+Or if many of them have failed:
 
+```
+j=jobs(PrimaryJobId)
 for sj in j.subjobs.select(status="failed"):
-      sj.backend.reset()```
+      sj.backend.reset()
+```
+
+# Merge n-tuples
+
+Inside this folder: `gangadir/workspace/user/LocalXML/jobID` type this:
+```
+hadd -f merged.root */output/*.root
+``` 

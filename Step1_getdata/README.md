@@ -62,4 +62,10 @@ for sj in j.subjobs.select(status="failed"):
 Inside this folder: `gangadir/workspace/user/LocalXML/jobID` type this:
 ```
 hadd -f merged.root */output/*.root
-``` 
+```
+
+# Location of the output data
+
+```
+/afs/cern.ch/work/a/atrisovi/public/Analysis/Step1_data
+```

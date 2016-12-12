@@ -73,4 +73,4 @@ Stripping21r1_D2HMuMu11_MagDown_NTuples.root
 Stripping21_D2HMuMu12_MagUp_NTuples.root
 Stripping21_D2HMuMu12_MagDown_NTuples.root
 ```
-are at `/afs/cern.ch/work/a/atrisovi/public/Analysis/Step1_data`
+are at `/eos/lhcb/user/a/atrisovi/analysis/Step1_data`

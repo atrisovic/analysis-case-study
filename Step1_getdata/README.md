@@ -57,6 +57,13 @@ for sj in j.subjobs.select(status="failed"):
       sj.backend.reset()
 ```
 
+# Errors
+
+Error: `GangaDiracError: GangaDiracError:  ('No Output sandbox registered for job 150547004',)`
+## Solution:
+Change `filesPerJob` to a smaller number, eg:
+`j.splitter = SplitByFiles ( filesPerJob = 1, maxFiles = -1 )`
+
 # Merge n-tuples
 
 Inside this folder: `gangadir/workspace/user/LocalXML/jobID` type this:

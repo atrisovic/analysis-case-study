@@ -1,8 +1,8 @@
 # Bookkeeping
 
 ```
-source /lhcb/scripts/lhcb-setup.sh
-SetupProject LHCbDirac 
+( source /lhcb/scripts/lhcb-setup.sh )
+lb-run LHCbDIRAC latest bash -norc
 lhcb-proxy-init 
 lhcb_bkk &
 ```

@@ -29,7 +29,7 @@ lb-run Ganga ganga Ganga_Options.py
 
 Alternatively:
 
-`SetupProject Ganga` or `SetupGanga`
+`SetupProject Ganga` or ~~`SetupGanga`~~
 
 Certificate: 
 `lhcb-proxy-init` or

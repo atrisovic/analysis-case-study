@@ -5,7 +5,7 @@
 using namespace std;
 
 void Main(TString sFile, TString sFolder, TString sTree) {
-TString sOutput = "D2hMuMu12_MagU_2PiMuMuSS_NTuple_Reduced.root";
+TString sOutput = "D2hMuMu12_MagD_2PiMuMuSS_NTuple_Reduced.root";
 
   // Get the data files
   TChain* Data = new TChain(sFolder+"/"+sTree);

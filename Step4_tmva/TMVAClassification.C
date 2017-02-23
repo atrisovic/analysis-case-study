@@ -218,17 +218,31 @@ int TMVAClassification( TString myMethodList = "" )
 
    // Read training and test data
    // (it is also possible to use ASCII format as input -> see TMVA Users Guide)
-   TString fnameMC = "../Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
-   TString fnameRD = "../Ntuples/D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root";
+   TString fnameMC_MD_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
+   TString fnameMC_MU_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagUp_NTuples_fin.root";
+   TString fnameMC_MD_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
+   TString fnameMC_MU_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagUp_NTuples_fin.root";
+   TString fnameRD = "/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root";
+   //TString fnameMC = "../Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
+   //TString fnameRD = "../Ntuples/D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root";
 
-   if (gSystem->AccessPathName( fnameMC ))  // file does not exist in local directory
+   if (gSystem->AccessPathName( fnameMC_MD_11 ))  // file does not exist in local directory
       gSystem->Exec("curl -O http://root.cern.ch/files/tmva_class_example.root");
    if (gSystem->AccessPathName( fnameRD ))  // file does not exist in local directory
       gSystem->Exec("curl -O http://root.cern.ch/files/tmva_class_example.root");
 
-   TFile *input = TFile::Open( fnameMC );
-   std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
-   TTree *signal     = (TTree*)input->Get("D2PimumuOSTuple/DecayTree");
+   TFile *input_MD_11 = TFile::Open( fnameMC_MD_11 );
+   TFile *input_MU_11 = TFile::Open( fnameMC_MU_11 );
+   TFile *input_MD_12 = TFile::Open( fnameMC_MD_12 );
+   TFile *input_MU_12 = TFile::Open( fnameMC_MU_12 );
+   std::cout << "--- TMVAClassification       : Using input files: " << input_MD_11->GetName() << std::endl
+                                                                     << input_MU_11->GetName() << std::endl
+                                                                     << input_MD_12->GetName() << std::endl
+                                                                     << input_MU_12->GetName() << std::endl;
+   TTree *signal_MD_11 = (TTree*)input_MD_11->Get("D2PimumuOSTuple/DecayTree");
+   TTree *signal_MU_11 = (TTree*)input_MU_11->Get("D2PimumuOSTuple/DecayTree");
+   TTree *signal_MD_12 = (TTree*)input_MD_12->Get("D2PimumuOSTuple/DecayTree");
+   TTree *signal_MU_12 = (TTree*)input_MU_12->Get("D2PimumuOSTuple/DecayTree");
 
    // --- Register the training and test trees
    
@@ -241,8 +255,11 @@ int TMVAClassification( TString myMethodList = "" )
    Double_t backgroundWeight = 1.0;
    
    // You can add an arbitrary number of signal or background trees
-   factory->AddSignalTree    ( signal,     signalWeight     );
-   factory->AddBackgroundTree( background, backgroundWeight );
+   factory->AddSignalTree    ( signal_MD_11,    signalWeight     );
+   factory->AddSignalTree    ( signal_MU_11,    signalWeight     );
+   factory->AddSignalTree    ( signal_MD_12,    signalWeight     );
+   factory->AddSignalTree    ( signal_MU_12,    signalWeight     );
+   factory->AddBackgroundTree( background,      backgroundWeight );
    
    // To give different trees for training and testing, do as follows:
    //    factory->AddSignalTree( signalTrainingTree, signalTrainWeight, "Training" );

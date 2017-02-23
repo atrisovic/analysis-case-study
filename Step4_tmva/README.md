@@ -14,3 +14,10 @@ Select the background from the data
 SetupProject DaVinci v41r4
 root TMVAClassification.C
 ```
+
+## Results of the training
+
+```
+root
+TMVA::TMVAGui("TMVA_D2PiMuMu12_MagDown_withLogVars.root")
+```

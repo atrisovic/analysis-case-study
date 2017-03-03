@@ -21,3 +21,19 @@ root TMVAClassification.C
 root
 TMVA::TMVAGui("TMVA_D2PiMuMu12_MagDown_withLogVars.root")
 ```
+
+ROC curve:
+
+![Alt text](roc.png?raw=true "ROC curve")
+
+Conclusion: BDT is slightly better method comparing to the others.
+
+## Add BDT response 
+
+Use the variables from the training found in TMVAClassification_BDT.weights.xml in `addBDT.C`
+
+```
+root
+.L addBDT.C
+addBDT()
+```

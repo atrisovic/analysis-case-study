@@ -2,6 +2,7 @@
 #include "../Step5_fitting/RooFitHeaders.h"
 #include "iostream"
 #include "fstream"
+#include <math.h>
 
 using namespace RooFit;
 using namespace TMath;
@@ -9,10 +10,10 @@ using namespace std;
 
 // Get the data
 //TFile f1("/afs/cern.ch/work/a/atrisovi/public/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root","read"); 
-TFile f1("/afs/cern.ch/work/a/atrisovi/public/Analysis/Step5_Fitting/D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root","read");
+//TFile f1("/afs/cern.ch/work/a/atrisovi/public/Analysis/Step5_Fitting/D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root","read");
+TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
 
-
-RooAddPdf* CreateModel(RooRealVar* D_MM) {
+RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig, RooRealVar* nBkg) {
 
   // Signal model for D+
   RooRealVar *mean_D = new RooRealVar("m_{D}", "m_{D}", 1869.6, 1850.0, 1890.0, "MeV/c^{2}");
@@ -22,9 +23,6 @@ RooAddPdf* CreateModel(RooRealVar* D_MM) {
   // Exponential background model
   RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.006, -1, 0.1, "c^{2}/MeV");
   RooExponential *CombBG_PDF = new RooExponential("CombBG_PDF", "CombBG_PDF", *D_MM, *K_CombBG);
-
-  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e4, 0., 1e7);
-  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e7);
 
   return new RooAddPdf("Model", "Model", RooArgList(*signal_model, *CombBG_PDF), RooArgList(*nSig, *nBkg));
 }
@@ -48,13 +46,13 @@ double InvMass_mumu(RooDataSet* Data, int i) {
 
   double MuPlus_Px = Data->get(i)->getRealValue("muplus_PX");
   double MuPlus_Py = Data->get(i)->getRealValue("muplus_PY");
-  double MuPlus_Pz = sqrt(Data->get(i)->getRealValue("muplus_P")*Data->get(i)->getRealValue("muplus_P") - Data->get(i)->getRealValue("muplus_PT")*Data->get(i)->getRealValue("muplus_PT"));
+  double MuPlus_Pz = Data->get(i)->getRealValue("muplus_PZ"); 
  
   double MuMinus_Px = Data->get(i)->getRealValue("muminus_PX");
   double MuMinus_Py = Data->get(i)->getRealValue("muminus_PY");
-  double MuMinus_Pz = sqrt(Data->get(i)->getRealValue("muminus_P")*Data->get(i)->getRealValue("muminus_P") - Data->get(i)->getRealValue("muminus_PT")*Data->get(i)->getRealValue("muminus_PT"));
+  double MuMinus_Pz = Data->get(i)->getRealValue("muminus_PZ"); 
 
-  double MuPlus_Psq = MuMinus_Px*MuMinus_Px + MuMinus_Py*MuMinus_Py + MuMinus_Pz*MuMinus_Pz;
+  double MuPlus_Psq = MuPlus_Px*MuPlus_Px + MuPlus_Py*MuPlus_Py + MuPlus_Pz*MuPlus_Pz;
   double MuMinus_Psq = MuMinus_Px*MuMinus_Px + MuMinus_Py*MuMinus_Py + MuMinus_Pz*MuMinus_Pz;
   
   double MuPlus_E = sqrt(MuPlus_Psq + MuMass*MuMass); 
@@ -64,14 +62,21 @@ double InvMass_mumu(RooDataSet* Data, int i) {
   MuMinus->SetPxPyPzE(MuMinus_Px, MuMinus_Py, MuMinus_Pz, MuMinus_E);
   
   TLorentzVector MuMu = *MuPlus + *MuMinus;
+    
+  //std::cout<< "mumu mass =\t" << MuMu.M() << std::endl;
+  //std::cout<< "mumu p =\t" << MuMu.P() << std::endl;
+  //std::cout<< "mumu E =\t" << MuMu.E() << std::endl;
+  //std::cout<< "muplus px =\t" << MuPlus_Px << std::endl;
+  //std::cout<< "muminus px =\t" << MuMinus_Px << std::endl;
+  //std::cout<< "i =\t" << i << std::endl;
 
   return MuMu.M();
 
 }
 
 
-void Plot(int numIters, Double_t BDT_cuts[numIters], Double_t Significance_FoM[numIters]) {
-  TGraph * gr = new TGraph(numIters, BDT_cuts, Significance_FoM);
+void Plot(int numIters, Double_t BDT_cuts[numIters], Double_t Significance_FoM[numIters], Double_t BDT_cuts_err[numIters], Double_t Significance_FoM_err[numIters]) {
+  TGraphErrors * gr = new TGraphErrors(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
  
   gr->SetTitle("Optimisation");
   gr->GetXaxis()->SetTitle("BDT>");
@@ -100,65 +105,91 @@ void Optimise()
   D2PimumuTree->SetBranchStatus("*",0);
   D2PimumuTree->SetBranchStatus("D_MM",1);
   D2PimumuTree->SetBranchStatus("BDT",1);
+  D2PimumuTree->SetBranchStatus("muplus_PX",1);
+  D2PimumuTree->SetBranchStatus("muplus_PY",1);
+  D2PimumuTree->SetBranchStatus("muplus_PZ",1);
+  D2PimumuTree->SetBranchStatus("muminus_PX",1);
+  D2PimumuTree->SetBranchStatus("muminus_PY",1);
+  D2PimumuTree->SetBranchStatus("muminus_PZ",1);
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "D_MM", MassMin, MassMax, "MeV/c^{2}");
-  RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.10, 0.25);
+  RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.0, 0.25);
+  RooRealVar* muplus_PX = new RooRealVar("muplus_PX", "muplus_PX", -1e9, 1e9);
+  RooRealVar* muplus_PY = new RooRealVar("muplus_PY", "muplus_PY", -1e9, 1e9);
+  RooRealVar* muplus_PZ = new RooRealVar("muplus_PZ", "muplus_PZ", -1e9, 1e9);
+  RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
+  RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
+  RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
 
   // Create the RooArgSet that holds the variables
-  RooArgSet D2PimumuSet(*D_MM, *BDT);
+  RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ);
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 
   // Select m(mumu) range consistent with phi (normalisation channel): 850 − 1250 MeV
   // NB high-m(μ+ μ− ): 1250 − 2000 MeV
-  //RooRealVar *MuMuMass = new RooRealVar("MuMuMass", "MuMuMass", 1000., 0., 1e6);
-  //All_Data->addColumn(*MuMuMass);
-  //for (int i=0; i<All_Data->numEntries(); i++){
-  //  MuMuMass->setVal(InvMass_mumu(All_Data, i));
-  //  All_Data->add(RooArgSet(*MuMuMass));
-  //}
-  
+  RooRealVar *MuMuMass = new RooRealVar("MuMuMass", "MuMuMass", 1000., 0., 1e6);
+  RooDataSet *MuMu_Data = new RooDataSet("MuMu_Data", "MuMu_Data", RooArgSet(*MuMuMass));
+  for (int i=0; i<All_Data->numEntries(); i++){
+    MuMuMass->setVal(InvMass_mumu(All_Data, i));
+    MuMu_Data->add(RooArgSet(*MuMuMass));
+  }
+  All_Data->merge(MuMu_Data);
+
+  RooDataSet* Data_Reduced = (RooDataSet*)All_Data->reduce("MuMuMass>850&&MuMuMass<1250");
+  Data_Reduced->Print();
+
+  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e4, 0., 1e7);
+  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e7);
   
   // Create simple model
-  RooAddPdf *Model = CreateModel(D_MM);
+  RooAddPdf *Model = CreateModel(D_MM, nSig, nBkg);
 
-  int numIters = 20;
-  double BDT_cut = 0.10;
+  int numIters = 40;
+  double BDT_cut = 0.0;
   double BDT_increment = 0.005;
 
   Double_t BDT_cuts[numIters];
+  Double_t BDT_cuts_err[numIters];
   Double_t Significance_FoM[numIters];
+  Double_t Significance_FoM_err[numIters];
   //Double_t SignalEfficiency[numIters];
   //Double_t BackgroundRejection[numIters];
     
   for (int i=0; i<numIters; i++) {
     
     // Perform the fit
-    RooFitResult* FitResult = Fit_D2Pimumu_Mass(All_Data, Model, BDT_cut);
+    RooFitResult* FitResult = Fit_D2Pimumu_Mass(Data_Reduced, Model, BDT_cut);
    
     // Determine background in D+ signal window +/- 25 MeV around peak
     D_MM->setRange("signal", 1869.62-25, 1869.62+25);
     RooExponential* bkg_model = (RooExponential*)Model->pdfList().find("CombBG_PDF");
     bkg_model->Print();
-    double B_norm = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*Model->getVariables()->getRealValue("nBkg");
-    double S_norm = Model->getVariables()->getRealValue("nSig");
+    double B_norm = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getVal(); //Model->getVariables()->getRealValue("nBkg");
+    double S_norm = nSig->getVal(); 
+    double B_norm_err = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getError();
+    double S_norm_err = nSig->getError();
 
     // Assume phase space coefficient between m(mumu) regions only dependent on window size
     double B_sig = B_norm * (2000-1250)/(1250-850);
+    double B_sig_err = B_norm_err * (2000-1250)/(1250-850);
     // Scale signal yield by ratio of branching fractions of normalisation channel and expected BF in signal channel
     // BF(D+ → π + (φ → μ+ μ− )) = (1.56±0.12)×10−6 (thesis page 80)
     // SM prediction:  BF(D+ → π + μ+ μ− ) = 3.7×10−9 (thesis page 48)
     double S_sig = S_norm * (3.7e-9)/(1.56e-6);
+    double S_sig_err = S_norm_err * (3.7e-9)/(1.56e-6);
 
     // Use significance FoM S/sqrt(S+B)
     Significance_FoM[i] = S_sig/sqrt(S_sig+B_sig);
+    Significance_FoM_err[i] = sqrt( pow((S_sig+2*B_sig)*S_sig_err,2)/(2*pow(S_sig+B_sig,3)) + pow(S_sig*B_sig_err,2)/(4*pow(S_sig+B_sig,3)) );
     BDT_cuts[i] = BDT_cut;
+    BDT_cuts_err[i] = 0;
    
     BDT_cut = BDT_cut + BDT_increment;
   }
 
-  Plot(numIters, BDT_cuts, Significance_FoM);
+  Plot(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
 
 } // Do something!
 

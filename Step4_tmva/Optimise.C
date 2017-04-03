@@ -28,10 +28,18 @@ RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig, RooRealVar* nBkg) {
 }
 
 
-RooFitResult* Fit_D2Pimumu_Mass( RooDataSet* Data, RooAddPdf* Model, double BDT_cut) {
+RooFitResult* Fit_D2Pimumu_Mass( RooDataSet* Data, RooAddPdf* Model, double BDT_cut, double PID_cut) {
 
-  RooDataSet* ReducedData = (RooDataSet*)Data->reduce(TString("BDT>"+to_string(BDT_cut)));
-  RooFitResult* FitResult = Model->fitTo(*ReducedData, Range(1775,1925), Extended(true), Save(true));
+  RooDataSet* ReducedData = (RooDataSet*)Data->reduce(TString("BDT>"+to_string(BDT_cut)+"&&muplus_PIDmu>"+to_string(PID_cut)+"&&muminus_PIDmu>"+to_string(PID_cut)));
+  RooFitResult* FitResult = Model->fitTo(*ReducedData, Range(1775,1925), Extended(true), Save(true), Strategy(1));
+  if (FitResult->covQual()!=3) {
+      Model->getVariables()->setRealValue("nSig", 1.e4);    
+      Model->getVariables()->setRealValue("nBkg", 1.e5);    
+      Model->getVariables()->setRealValue("K_{CombBG}", -0.006);    
+      Model->getVariables()->setRealValue("m_{D}", 1869.6);    
+      Model->getVariables()->setRealValue("sigma", 10.);    
+      RooFitResult* FitResult = Model->fitTo(*ReducedData, Range(1775,1925), Extended(true), Save(true), Strategy(0));
+  }
   return FitResult;
 
 }
@@ -63,13 +71,6 @@ double InvMass_mumu(RooDataSet* Data, int i) {
   
   TLorentzVector MuMu = *MuPlus + *MuMinus;
     
-  //std::cout<< "mumu mass =\t" << MuMu.M() << std::endl;
-  //std::cout<< "mumu p =\t" << MuMu.P() << std::endl;
-  //std::cout<< "mumu E =\t" << MuMu.E() << std::endl;
-  //std::cout<< "muplus px =\t" << MuPlus_Px << std::endl;
-  //std::cout<< "muminus px =\t" << MuMinus_Px << std::endl;
-  //std::cout<< "i =\t" << i << std::endl;
-
   return MuMu.M();
 
 }
@@ -88,6 +89,13 @@ void Plot(int numIters, Double_t BDT_cuts[numIters], Double_t Significance_FoM[n
 
 }
 
+void Plot(TH2D* h) {
+  TCanvas c("c", "c", 800, 800);
+  h->SetTitle("Significance; BDT cut; PIDmu cut");
+  h->SetStats(0);
+  h->Draw("COLZ");
+  c.SaveAs("2D_Optimisation.pdf");
+}
 
 
 void Optimise() 
@@ -111,6 +119,8 @@ void Optimise()
   D2PimumuTree->SetBranchStatus("muminus_PX",1);
   D2PimumuTree->SetBranchStatus("muminus_PY",1);
   D2PimumuTree->SetBranchStatus("muminus_PZ",1);
+  D2PimumuTree->SetBranchStatus("muplus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("muminus_PIDmu",1);
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "D_MM", MassMin, MassMax, "MeV/c^{2}");
@@ -121,9 +131,12 @@ void Optimise()
   RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
   RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
+  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", -1e9, 1e9);
+  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", -1e9, 1e9);
 
   // Create the RooArgSet that holds the variables
-  RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ);
+  RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ, *muplus_PIDmu);
+  D2PimumuSet.add(*muminus_PIDmu);
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 
@@ -140,56 +153,78 @@ void Optimise()
   RooDataSet* Data_Reduced = (RooDataSet*)All_Data->reduce("MuMuMass>850&&MuMuMass<1250");
   Data_Reduced->Print();
 
-  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e4, 0., 1e7);
-  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e7);
+  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e4, 0., 1e15);
+  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e15);
   
   // Create simple model
   RooAddPdf *Model = CreateModel(D_MM, nSig, nBkg);
 
-  int numIters = 40;
+  int numIters = 10;
   double BDT_cut = 0.0;
-  double BDT_increment = 0.005;
+  double BDT_increment = 0.02;
 
-  Double_t BDT_cuts[numIters];
-  Double_t BDT_cuts_err[numIters];
-  Double_t Significance_FoM[numIters];
-  Double_t Significance_FoM_err[numIters];
-  //Double_t SignalEfficiency[numIters];
-  //Double_t BackgroundRejection[numIters];
+  int numIters_PID = 12;
+  double PID_cut = -2;
+  double PID_increment = 0.5;
+
+  TH2D *hBDT_PID = new TH2D("hBDT_PID", "hBDT_PID", numIters, BDT_cut, BDT_cut+numIters*BDT_increment, numIters_PID, PID_cut, PID_cut+numIters_PID*PID_increment); 
+  hBDT_PID->Sumw2();
+  
+  //Double_t BDT_cuts[numIters];
+  //Double_t BDT_cuts_err[numIters];
+  //Double_t Significance_FoM[numIters];
+  //Double_t Significance_FoM_err[numIters];
     
   for (int i=0; i<numIters; i++) {
     
-    // Perform the fit
-    RooFitResult* FitResult = Fit_D2Pimumu_Mass(Data_Reduced, Model, BDT_cut);
-   
-    // Determine background in D+ signal window +/- 25 MeV around peak
-    D_MM->setRange("signal", 1869.62-25, 1869.62+25);
-    RooExponential* bkg_model = (RooExponential*)Model->pdfList().find("CombBG_PDF");
-    bkg_model->Print();
-    double B_norm = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getVal(); //Model->getVariables()->getRealValue("nBkg");
-    double S_norm = nSig->getVal(); 
-    double B_norm_err = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getError();
-    double S_norm_err = nSig->getError();
+    double PID_cut = -2;
+    
+    for (int j=0; j<numIters_PID; j++) {
+      
+      //nSig->setVal(1.e4);
+      //nBkg->setVal(1.e5);
+      //Model->getVariables()->setRealValue("K_{CombBG}", -0.006);    
+      //Model->getVariables()->setRealValue("m_{D}", 1869.6);    
+      //Model->getVariables()->setRealValue("sigma", 10.);    
 
-    // Assume phase space coefficient between m(mumu) regions only dependent on window size
-    double B_sig = B_norm * (2000-1250)/(1250-850);
-    double B_sig_err = B_norm_err * (2000-1250)/(1250-850);
-    // Scale signal yield by ratio of branching fractions of normalisation channel and expected BF in signal channel
-    // BF(D+ → π + (φ → μ+ μ− )) = (1.56±0.12)×10−6 (thesis page 80)
-    // SM prediction:  BF(D+ → π + μ+ μ− ) = 3.7×10−9 (thesis page 48)
-    double S_sig = S_norm * (3.7e-9)/(1.56e-6);
-    double S_sig_err = S_norm_err * (3.7e-9)/(1.56e-6);
+      // Perform the fit
+      RooFitResult* FitResult = Fit_D2Pimumu_Mass(Data_Reduced, Model, BDT_cut, PID_cut);
 
-    // Use significance FoM S/sqrt(S+B)
-    Significance_FoM[i] = S_sig/sqrt(S_sig+B_sig);
-    Significance_FoM_err[i] = sqrt( pow((S_sig+2*B_sig)*S_sig_err,2)/(2*pow(S_sig+B_sig,3)) + pow(S_sig*B_sig_err,2)/(4*pow(S_sig+B_sig,3)) );
-    BDT_cuts[i] = BDT_cut;
-    BDT_cuts_err[i] = 0;
+      // Determine background in D+ signal window +/- 25 MeV around peak
+      D_MM->setRange("signal", 1869.62-25, 1869.62+25);
+      RooExponential* bkg_model = (RooExponential*)Model->pdfList().find("CombBG_PDF");
+      bkg_model->Print();
+      double B_norm = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getVal();
+      double S_norm = nSig->getVal(); 
+      double B_norm_err = bkg_model->createIntegral(RooArgSet(*D_MM), RooArgSet(*D_MM), "signal")->getVal()*nBkg->getError();
+      double S_norm_err = nSig->getError();
+
+      // Assume phase space coefficient between m(mumu) regions only dependent on window size
+      double B_sig = B_norm * (2000-1250)/(1250-850);
+      double B_sig_err = B_norm_err * (2000-1250)/(1250-850);
+      // Scale signal yield by ratio of branching fractions of normalisation channel and expected BF in signal channel
+      // BF(D+ → π + (φ → μ+ μ− )) = (1.56±0.12)×10−6 (thesis page 80)
+      // SM prediction:  BF(D+ → π + μ+ μ− ) = 3.7×10−9 (thesis page 48)
+      double S_sig = S_norm * (3.7e-9)/(1.56e-6);
+      double S_sig_err = S_norm_err * (3.7e-9)/(1.56e-6);
+
+      // Use significance FoM S/sqrt(S+B)
+      double Significance_FoM = S_sig/sqrt(S_sig+B_sig);
+      
+      hBDT_PID->Fill(BDT_cut, PID_cut, Significance_FoM);
+      
+      //Significance_FoM = S_sig/sqrt(S_sig+B_sig);
+      //Significance_FoM_err[i] = sqrt( pow((S_sig+2*B_sig)*S_sig_err,2)/(2*pow(S_sig+B_sig,3)) + pow(S_sig*B_sig_err,2)/(4*pow(S_sig+B_sig,3)) );
+      //BDT_cuts[i] = BDT_cut;
+      //BDT_cuts_err[i] = 0;
    
+      PID_cut = PID_cut + PID_increment;
+    }
     BDT_cut = BDT_cut + BDT_increment;
   }
 
-  Plot(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
+  //Plot(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
+  Plot(hBDT_PID);
 
 } // Do something!
 

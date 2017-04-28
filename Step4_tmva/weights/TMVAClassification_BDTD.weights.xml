@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.06/02 [394754]"/>
     <Info name="Creator" value="atrisovi"/>
-    <Info name="Date" value="Thu Feb 23 16:19:21 2017"/>
+    <Info name="Date" value="Wed Apr 26 15:09:02 2017"/>
     <Info name="Host" value="Linux lcgapp-slc6-physical1.cern.ch 2.6.32-573.8.1.el6.x86_64 #1 SMP Wed Nov 11 15:27:45 CET 2015 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/eos/lhcb/user/a/atrisovi/analysis-case-study/Step4_tmva"/>
     <Info name="Training events" value="2000"/>
-    <Info name="TrainingTime" value="1.40675402e+00"/>
+    <Info name="TrainingTime" value="1.31480908e+00"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>

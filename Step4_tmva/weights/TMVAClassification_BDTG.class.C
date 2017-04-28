@@ -10,7 +10,7 @@ Method         : BDT::BDTG
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.06/02       [394754]
 Creator        : atrisovi
-Date           : Thu Feb 23 16:17:48 2017
+Date           : Wed Apr 26 15:08:51 2017
 Host           : Linux lcgapp-slc6-physical1.cern.ch 2.6.32-573.8.1.el6.x86_64 #1 SMP Wed Nov 11 15:27:45 CET 2015 x86_64 x86_64 x86_64 GNU/Linux
 Dir            : /eos/lhcb/user/a/atrisovi/analysis-case-study/Step4_tmva
 Training events: 2000

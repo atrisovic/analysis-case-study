@@ -1,5 +1,5 @@
 //#include "../Step5_fitting/RootHeaders.h"
-#include "../Step5_fitting/RooFitHeaders.h"
+#include "RooFitHeaders.h"
 #include "iostream"
 #include "fstream"
 #include <math.h>
@@ -8,9 +8,10 @@ using namespace RooFit;
 using namespace TMath;
 using namespace std;
 
+// Set to true to make plots of the mass distribution for each BDT and PID cut
+bool PlotMass = false;
+
 // Get the data
-//TFile f1("/afs/cern.ch/work/a/atrisovi/public/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root","read"); 
-//TFile f1("/afs/cern.ch/work/a/atrisovi/public/Analysis/Step5_Fitting/D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root","read");
 TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
 
 RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig, RooRealVar* nBkg) {
@@ -21,31 +22,52 @@ RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig, RooRealVar* nBkg) {
   RooGaussian *signal_model = new RooGaussian("signal_model", "signal_model", *D_MM, *mean_D, *sigma);
 
   // Exponential background model
-  RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.006, -1, 0.1, "c^{2}/MeV");
+  RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.001, -1, 0.1, "c^{2}/MeV");
   RooExponential *CombBG_PDF = new RooExponential("CombBG_PDF", "CombBG_PDF", *D_MM, *K_CombBG);
 
   return new RooAddPdf("Model", "Model", RooArgList(*signal_model, *CombBG_PDF), RooArgList(*nSig, *nBkg));
 }
 
 
-RooFitResult* Fit_D2Pimumu_Mass( RooDataSet* Data, RooAddPdf* Model, double BDT_cut, double PID_cut) {
+RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooDataSet* Data, RooAddPdf* Model, double BDT_cut, double PID_cut) {
 
+  // Apply PID and BDT cuts
   RooDataSet* ReducedData = (RooDataSet*)Data->reduce(TString("BDT>"+to_string(BDT_cut)+"&&muplus_PIDmu>"+to_string(PID_cut)+"&&muminus_PIDmu>"+to_string(PID_cut)));
   RooFitResult* FitResult = Model->fitTo(*ReducedData, Range(1775,1925), Extended(true), Save(true), Strategy(1));
+  // Try fit again at new starting values and with Strategy(0) if fit fails
   if (FitResult->covQual()!=3) {
-      Model->getVariables()->setRealValue("nSig", 1.e4);    
-      Model->getVariables()->setRealValue("nBkg", 1.e5);    
-      Model->getVariables()->setRealValue("K_{CombBG}", -0.006);    
+      Model->getVariables()->setRealValue("nSig", 1.e3);    
+      Model->getVariables()->setRealValue("nBkg", 1.e4);    
+      Model->getVariables()->setRealValue("K_{CombBG}", -0.001);    
       Model->getVariables()->setRealValue("m_{D}", 1869.6);    
       Model->getVariables()->setRealValue("sigma", 10.);    
       RooFitResult* FitResult = Model->fitTo(*ReducedData, Range(1775,1925), Extended(true), Save(true), Strategy(0));
   }
+
+  // Plot mass distribution if PlotMass flag is set 
+  if (PlotMass) {
+    D_MM->setRange("fit_range", 1775,1925);
+      
+    RooPlot* frame = D_MM->frame(1775,1925, 100) ;
+    ReducedData->plotOn(frame);
+    Model->plotOn(frame, NormRange("fit_range"), Components("CombBG_PDF"), LineColor(3), LineStyle(2));
+    Model->plotOn(frame, NormRange("fit_range"), Components("signal_model"), LineColor(2), LineStyle(2));
+    Model->plotOn(frame, NormRange("fit_range"));
+
+    TCanvas c("c", "c", 800, 800);
+    frame->Draw();
+    c.SaveAs(TString("mass_plots/optimisation_BDT_"+to_string(BDT_cut)+"_PID_"+to_string(PID_cut)+".pdf"));
+  }
+
   return FitResult;
 
 }
 
 
 double InvMass_mumu(RooDataSet* Data, int i) {
+  // Calculates the invariant mass of the two muons
+  // Use to select the normalisation channel phi->mumu for optimisation
+  // Note phi mass peak ~ 1000 MeV in m(mumu) distribution
 
   double MuMass = 105.66; //PDG
 
@@ -76,6 +98,20 @@ double InvMass_mumu(RooDataSet* Data, int i) {
 }
 
 
+void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
+    // Plot m(mumu)
+    RooPlot* frame = MuMuMass->frame(850,2000,100);
+    Data->plotOn(frame);
+    
+    frame->SetXTitle("m(#mu#mu) [MeV/c^2]");
+    frame->SetTitleOffset(1.2, "Y");
+
+    TCanvas c("c", "c", 800, 800);
+    frame->Draw();
+    c.SaveAs("MuMuMass.pdf");
+}
+
+
 void Plot(int numIters, Double_t BDT_cuts[numIters], Double_t Significance_FoM[numIters], Double_t BDT_cuts_err[numIters], Double_t Significance_FoM_err[numIters]) {
   TGraphErrors * gr = new TGraphErrors(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
  
@@ -103,7 +139,7 @@ void Optimise()
   cout << "Hello there" << endl;
   
   // Limits
-  Double_t MassMin = 1800.0;
+  Double_t MassMin = 1775.0;
   Double_t MassMax = 2050.0;
 
   // Get the tree
@@ -123,7 +159,7 @@ void Optimise()
   D2PimumuTree->SetBranchStatus("muminus_PIDmu",1);
 
   // Create the dataset variables
-  RooRealVar* D_MM = new RooRealVar("D_MM", "D_MM", MassMin, MassMax, "MeV/c^{2}");
+  RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
   RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.0, 0.25);
   RooRealVar* muplus_PX = new RooRealVar("muplus_PX", "muplus_PX", -1e9, 1e9);
   RooRealVar* muplus_PY = new RooRealVar("muplus_PY", "muplus_PY", -1e9, 1e9);
@@ -141,7 +177,7 @@ void Optimise()
   All_Data->Print();
 
   // Select m(mumu) range consistent with phi (normalisation channel): 850 − 1250 MeV
-  // NB high-m(μ+ μ− ): 1250 − 2000 MeV
+  // NB high-m(μ+μ−) (signal): 1250 − 2000 MeV
   RooRealVar *MuMuMass = new RooRealVar("MuMuMass", "MuMuMass", 1000., 0., 1e6);
   RooDataSet *MuMu_Data = new RooDataSet("MuMu_Data", "MuMu_Data", RooArgSet(*MuMuMass));
   for (int i=0; i<All_Data->numEntries(); i++){
@@ -150,11 +186,13 @@ void Optimise()
   }
   All_Data->merge(MuMu_Data);
 
+  PlotMuMuMass(MuMuMass, All_Data);
+
   RooDataSet* Data_Reduced = (RooDataSet*)All_Data->reduce("MuMuMass>850&&MuMuMass<1250");
   Data_Reduced->Print();
 
-  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e4, 0., 1e15);
-  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e15);
+  RooRealVar *nSig = new RooRealVar("nSig", "Signal Yield", 1.e3, 0., 1e6);
+  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e4, 0., 1e6);
   
   // Create simple model
   RooAddPdf *Model = CreateModel(D_MM, nSig, nBkg);
@@ -178,17 +216,17 @@ void Optimise()
   for (int i=0; i<numIters; i++) {
     
     double PID_cut = -2;
+    nSig->setVal(1.e3);
+    nBkg->setVal(1.e4);
     
     for (int j=0; j<numIters_PID; j++) {
       
-      //nSig->setVal(1.e4);
-      //nBkg->setVal(1.e5);
       //Model->getVariables()->setRealValue("K_{CombBG}", -0.006);    
       //Model->getVariables()->setRealValue("m_{D}", 1869.6);    
       //Model->getVariables()->setRealValue("sigma", 10.);    
 
       // Perform the fit
-      RooFitResult* FitResult = Fit_D2Pimumu_Mass(Data_Reduced, Model, BDT_cut, PID_cut);
+      RooFitResult* FitResult = Fit_D2Pimumu_Mass(D_MM, Data_Reduced, Model, BDT_cut, PID_cut);
 
       // Determine background in D+ signal window +/- 25 MeV around peak
       D_MM->setRange("signal", 1869.62-25, 1869.62+25);
@@ -211,7 +249,8 @@ void Optimise()
       // Use significance FoM S/sqrt(S+B)
       double Significance_FoM = S_sig/sqrt(S_sig+B_sig);
       
-      hBDT_PID->Fill(BDT_cut, PID_cut, Significance_FoM);
+      // Shift cuts to avoid filling at the bin boundary
+      hBDT_PID->Fill(BDT_cut+1.*BDT_increment/2, PID_cut+1.*PID_increment/2, Significance_FoM);
       
       //Significance_FoM = S_sig/sqrt(S_sig+B_sig);
       //Significance_FoM_err[i] = sqrt( pow((S_sig+2*B_sig)*S_sig_err,2)/(2*pow(S_sig+B_sig,3)) + pow(S_sig*B_sig_err,2)/(4*pow(S_sig+B_sig,3)) );
@@ -219,6 +258,7 @@ void Optimise()
       //BDT_cuts_err[i] = 0;
    
       PID_cut = PID_cut + PID_increment;
+
     }
     BDT_cut = BDT_cut + BDT_increment;
   }

@@ -1,0 +1,29 @@
+#include <TFile.h>
+#include <TH1.h>
+#include <TF1.h>
+
+void HistogramsSimple()
+
+{
+//Open TFile and get histograms
+ 
+  TFile *fhist = new TFile("beam_Profile.root");
+
+ 
+  TH1D *lab_profile;
+  fhist->GetObject("Blab_smear",lab_profile);
+  if (!lab_profile) { std::cout << "Histogram NOT found!" << std::endl; }
+  lab_profile->SetDirectory(0);
+  fhist->Close();
+  lab_profile->Draw("ep");
+  TF1 * f2 = new TF1("f2","[0]/x",1.2,5.5);
+  f2->SetParameter(0, 99);
+  lab_profile->Fit("f2","R");
+ 
+ 
+  //To draw a line with number fitted by Pep Le Pew
+  //TF1 * f3 = new TF1("f3","  1.00046e+00/x",1.2,5.5);
+  //f3->Draw("same");
+
+ 
+}

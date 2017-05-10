@@ -49,8 +49,8 @@ void D2PimumuOS_class::Loop()
       if(Cut(piplus_PIDK > 0)) continue;
       if(Cut(piplus_PIDmu > 0)) continue;
       // muons must satisfy ISMUON
-      if(Cut(muplus_isMuon) == 0)) continue;
-      if(Cut(muminus_isMuon) == 0)) continue;
+      if(Cut(muplus_isMuon) == 0) continue;
+      if(Cut(muminus_isMuon) == 0) continue;
       outTree1->Fill();
    }
    outFile1->Write();

@@ -40,6 +40,21 @@ void D2PimumuSS_class::Loop()
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+      if (ientry < 0) break;
+      nb = fChain->GetEntry(jentry);   nbytes += nb;
+      // if (Cut(ientry) < 0) continue;
+      // BDT cut > 0.1
+      if(Cut(BDT) < 0.1) continue;
+      // PID mu > 1
+      if(Cut(muplus_PIDmu) < 1) continue;
+      if(Cut(muminus_PIDmu) < 1) continue;
+      // from ANA note: DDL_{KPi}<0
+      if(Cut(piplus_PIDK > 0)) continue;
+      if(Cut(piplus_PIDmu > 0)) continue;
+      // muons must satisfy ISMUON
+      if(Cut(muplus_isMuon) == 0) continue;
+      if(Cut(muminus_isMuon) == 0) continue;
+      //
       outTree1->Fill();
    }
    outFile1->Write();

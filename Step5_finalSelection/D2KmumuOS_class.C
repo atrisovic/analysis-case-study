@@ -7,12 +7,12 @@
 void D2KmumuOS_class::Loop()
 {
 //   In a ROOT session, you can do:
-//      root> .L D2KmumuOS_class.C
-//      root> D2KmumuOS_class t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
+//      Root > .L D2KmumuOS_class.C
+//      Root > D2KmumuOS_class t
+//      Root > t.GetEntry(12); // Fill t data members with entry number 12
+//      Root > t.Show();       // Show values of entry 12
+//      Root > t.Show(16);     // Read and show values of entry 16
+//      Root > t.Loop();       // Loop on all entries
 //
 
 //     This is the loop skeleton where:
@@ -31,11 +31,6 @@ void D2KmumuOS_class::Loop()
 //by  b_branchname->GetEntry(ientry); //read only this branch
    if (fChain == 0) return;
 
-
-   TFile *const outFile1 = TFile::Open("D2mumuOS_final.root", "recreate");
-   TTree *const outTree1 = fChain->CloneTree(0);
-
-   // put here 100 to test
    Long64_t nentries = fChain->GetEntriesFast();
 
    Long64_t nbytes = 0, nb = 0;
@@ -43,12 +38,6 @@ void D2KmumuOS_class::Loop()
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-
-      
       // if (Cut(ientry) < 0) continue;
-    outTree1->Fill();
-    }
-    outFile1->Write();
-    outFile1->Close();
+   }
 }
-

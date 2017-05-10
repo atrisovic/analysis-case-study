@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Apr 28 23:00:28 2017 by ROOT version 6.08/02
+// Wed May 10 15:17:08 2017 by ROOT version 5.34/36
 // from TTree DecayTree/DecayTree
 // found on file: root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuSS.root
 //////////////////////////////////////////////////////////
@@ -14,12 +14,12 @@
 
 // Header file for the classes stored in the TTree if any.
 
+// Fixed size dimensions of array or collections stored in the TTree if any.
+
 class D2PimumuSS_class {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
-
-// Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
    Double_t        D_ENDVERTEX_CHI2;
@@ -223,6 +223,7 @@ public :
    Int_t           nPVs;
    Int_t           nTracks;
    Int_t           nSPDHits;
+   Float_t         BDT;
 
    // List of branches
    TBranch        *b_D_ENDVERTEX_CHI2;   //!
@@ -426,6 +427,7 @@ public :
    TBranch        *b_nPVs;   //!
    TBranch        *b_nTracks;   //!
    TBranch        *b_nSPDHits;   //!
+   TBranch        *b_BDT;   //!
 
    D2PimumuSS_class(TTree *tree=0);
    virtual ~D2PimumuSS_class();
@@ -699,6 +701,7 @@ void D2PimumuSS_class::Init(TTree *tree)
    fChain->SetBranchAddress("nPVs", &nPVs, &b_nPVs);
    fChain->SetBranchAddress("nTracks", &nTracks, &b_nTracks);
    fChain->SetBranchAddress("nSPDHits", &nSPDHits, &b_nSPDHits);
+   fChain->SetBranchAddress("BDT", &BDT, &b_BDT);
    Notify();
 }
 

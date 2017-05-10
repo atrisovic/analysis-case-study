@@ -30,8 +30,9 @@ void D2PimumuOS_class::Loop()
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
    if (fChain == 0) return;
-
-   Long64_t nentries = fChain->GetEntriesFast();
+   TFile *const outFile1 = TFile::Open("D2PimumuOS_final.root", "recreate");
+   TTree *const outTree1 = fChain->CloneTree(0);
+   Long64_t nentries = 100 // fChain->GetEntriesFast();
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -39,5 +40,19 @@ void D2PimumuOS_class::Loop()
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+      // BDT cut > 0.1
+      if(Cut(BDT) < 0.1) continue;
+      // PID mu > 1
+      if(Cut(muplus_PIDmu) < 1) continue;
+      if(Cut(muminus_PIDmu) < 1) continue;
+      // from ANA note: DDL_{KPi}<0
+      if(Cut(piplus_PIDK > 0) continue;
+      if(Cut(piplus_PIDmu > 0) continue;
+      // muons must satisfy ISMUON
+      if(Cut(muplus_isMuon) == 0) continue;
+      if(Cut(muminus_isMuon) == 0) continue;
+      outTree1->Fill();
    }
+   outFile1->Write();
+   outFile1->Close();
 }

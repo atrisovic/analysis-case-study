@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Apr 28 22:21:07 2017 by ROOT version 6.08/02
+// Wed May 10 15:15:45 2017 by ROOT version 5.34/36
 // from TTree DecayTree/DecayTree
 // found on file: root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2KMuMuSS.root
 //////////////////////////////////////////////////////////
@@ -14,12 +14,12 @@
 
 // Header file for the classes stored in the TTree if any.
 
+// Fixed size dimensions of array or collections stored in the TTree if any.
+
 class D2KmumuSS_class {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
-
-// Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
    Double_t        D_ENDVERTEX_CHI2;
@@ -224,6 +224,7 @@ public :
    Int_t           nTracks;
    Int_t           nSPDHits;
    Float_t         BDT;
+   Float_t         BDT;
 
    // List of branches
    TBranch        *b_D_ENDVERTEX_CHI2;   //!
@@ -427,6 +428,7 @@ public :
    TBranch        *b_nPVs;   //!
    TBranch        *b_nTracks;   //!
    TBranch        *b_nSPDHits;   //!
+   TBranch        *b_BDT;   //!
    TBranch        *b_BDT;   //!
 
    D2KmumuSS_class(TTree *tree=0);
@@ -702,6 +704,7 @@ void D2KmumuSS_class::Init(TTree *tree)
    fChain->SetBranchAddress("nTracks", &nTracks, &b_nTracks);
    fChain->SetBranchAddress("nSPDHits", &nSPDHits, &b_nSPDHits);
    fChain->SetBranchAddress("BDT", &BDT, &b_BDT);
+//    fChain->SetBranchAddress("BDT", &BDT, &b_BDT);
    Notify();
 }
 

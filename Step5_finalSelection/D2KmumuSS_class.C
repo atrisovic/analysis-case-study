@@ -7,12 +7,12 @@
 void D2KmumuSS_class::Loop()
 {
 //   In a ROOT session, you can do:
-//      root> .L D2KmumuSS_class.C
-//      root> D2KmumuSS_class t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
+//      Root > .L D2KmumuSS_class.C
+//      Root > D2KmumuSS_class t
+//      Root > t.GetEntry(12); // Fill t data members with entry number 12
+//      Root > t.Show();       // Show values of entry 12
+//      Root > t.Show(16);     // Read and show values of entry 16
+//      Root > t.Loop();       // Loop on all entries
 //
 
 //     This is the loop skeleton where:

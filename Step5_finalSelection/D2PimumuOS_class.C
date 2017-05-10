@@ -46,11 +46,11 @@ void D2PimumuOS_class::Loop()
       if(Cut(muplus_PIDmu) < 1) continue;
       if(Cut(muminus_PIDmu) < 1) continue;
       // from ANA note: DDL_{KPi}<0
-      if(Cut(piplus_PIDK > 0) continue;
-      if(Cut(piplus_PIDmu > 0) continue;
+      if(Cut(piplus_PIDK > 0)) continue;
+      if(Cut(piplus_PIDmu > 0)) continue;
       // muons must satisfy ISMUON
-      if(Cut(muplus_isMuon) == 0) continue;
-      if(Cut(muminus_isMuon) == 0) continue;
+      if(Cut(muplus_isMuon) == 0)) continue;
+      if(Cut(muminus_isMuon) == 0)) continue;
       outTree1->Fill();
    }
    outFile1->Write();

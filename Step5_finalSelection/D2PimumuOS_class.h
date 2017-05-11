@@ -225,7 +225,7 @@ public :
    Int_t           nTracks;
    Int_t           nSPDHits;
    Float_t         BDT;
-   Float_t         BDT;
+  // Float_t         BDT;
 
    // List of branches
    TBranch        *b_D_ENDVERTEX_CHI2;   //!
@@ -431,7 +431,7 @@ public :
    TBranch        *b_nTracks;   //!
    TBranch        *b_nSPDHits;   //!
    TBranch        *b_BDT;   //!
-   TBranch        *b_BDT;   //!
+//   TBranch        *b_BDT;   //!
 
    D2PimumuOS_class(TTree *tree=0);
    virtual ~D2PimumuOS_class();
@@ -455,9 +455,14 @@ D2PimumuOS_class::D2PimumuOS_class(TTree *tree) : fChain(0)
       TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root");
       if (!f || !f->IsOpen()) {
          f = new TFile("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root");
-      }
-      TDirectory * dir = (TDirectory*)f->Get("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root:/D2PimumuOSTuple");
-      dir->GetObject("DecayTree",tree);
+     }
+	std::cout<<"file opened: "<<f->GetName()<<std::endl; 
+	f->ls(); 
+
+	tree = (TTree*)f->Get("D2PimumuOSTuple/DecayTree"); 
+
+//      TDirectory * dir = (TDirectory*)f->Get("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root:/D2PimumuOSTuple");
+ //     dir->GetObject("DecayTree",tree);
 
    }
    Init(tree);

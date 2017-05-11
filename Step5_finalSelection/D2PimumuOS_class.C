@@ -29,11 +29,15 @@ void D2PimumuOS_class::Loop()
 // METHOD2: replace line
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
-   if (fChain == 0) return;
-   TFile *const outFile1 = TFile::Open("D2PimumuOS_final.root", "recreate");
-   TTree *const outTree1 = fChain->CloneTree(0);
-   Long64_t nentries = 100 // fChain->GetEntriesFast();
+   
+	if (fChain == 0) {std::cout<<"We didnt find a tree, sorry!"<<std::endl; 
+return;}
 
+   TFile *const outFile1 = TFile::Open("D2PimumuOS_final.root", "recreate");
+	std::cout<<"We created empty file with name: "<<outFile1->GetName()<<std::endl; 
+   TTree *const outTree1 = fChain->CloneTree(0);
+   Long64_t nentries = 10000; // fChain->GetEntriesFast();
+	std::cout<<"[INFO] Run over "<<nentries<<" entries"<<std::endl; 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
@@ -41,18 +45,22 @@ void D2PimumuOS_class::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
       // BDT cut > 0.1
-      if(Cut(BDT) < 0.1) continue;
+      if(BDT < 0.1) continue;
       // PID mu > 1
-      if(Cut(muplus_PIDmu) < 1) continue;
-      if(Cut(muminus_PIDmu) < 1) continue;
+      if(muplus_PIDmu < 1) continue;
+      if(muminus_PIDmu < 1) continue;
       // from ANA note: DDL_{KPi}<0
-      if(Cut(piplus_PIDK > 0)) continue;
-      if(Cut(piplus_PIDmu > 0)) continue;
+      if(piplus_PIDK > 0) continue;
+      if(piplus_PIDmu > 0) continue;
       // muons must satisfy ISMUON
-      if(Cut(muplus_isMuon) == 0) continue;
-      if(Cut(muminus_isMuon) == 0) continue;
-      outTree1->Fill();
+      if(muplus_isMuon == 0) continue;
+      if(muminus_isMuon == 0) continue;
+     outTree1->Fill();
    }
+
+std::cout<<"[INFO] Number of events in In the output tree: "<<outTree1->GetEntries()<<std::endl; 
+std::cout<<"[INFO] Efficiency: "<<double(outTree1->GetEntries())/(double(nentries))<<std::endl;  
    outFile1->Write();
    outFile1->Close();
+
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu May 11 16:15:16 2017 by ROOT version 6.08/06
+// Mon May 15 16:36:53 2017 by ROOT version 6.08/06
 // from TTree DecayTree/DecayTree
 // found on file: root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/MC_D2PiMuMu.root
 //////////////////////////////////////////////////////////
@@ -638,6 +638,7 @@ public :
    Int_t           L0Global;
    UInt_t          Hlt1Global;
    UInt_t          Hlt2Global;
+   Float_t         BDT;
 
    // List of branches
    TBranch        *b_D_ENDVERTEX_X;   //!
@@ -1248,6 +1249,7 @@ public :
    TBranch        *b_L0Global;   //!
    TBranch        *b_Hlt1Global;   //!
    TBranch        *b_Hlt2Global;   //!
+   TBranch        *b_BDT;   //!
 
    MCD2PimumuOS_class(TTree *tree=0);
    virtual ~MCD2PimumuOS_class();
@@ -1272,8 +1274,7 @@ MCD2PimumuOS_class::MCD2PimumuOS_class(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen()) {
          f = new TFile("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/MC_D2PiMuMu.root");
       }
-      TDirectory * dir = (TDirectory*)f->Get("root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/MC_D2PiMuMu.root:/D2PimumuOSTuple");
-      dir->GetObject("DecayTree",tree);
+        tree = (TTree*)f->Get("D2PimumuOSTuple/DecayTree"); 
 
    }
    Init(tree);
@@ -1928,6 +1929,7 @@ void MCD2PimumuOS_class::Init(TTree *tree)
    fChain->SetBranchAddress("L0Global", &L0Global, &b_L0Global);
    fChain->SetBranchAddress("Hlt1Global", &Hlt1Global, &b_Hlt1Global);
    fChain->SetBranchAddress("Hlt2Global", &Hlt2Global, &b_Hlt2Global);
+   fChain->SetBranchAddress("BDT", &BDT, &b_BDT);
    Notify();
 }
 

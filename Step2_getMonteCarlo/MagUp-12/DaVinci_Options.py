@@ -120,7 +120,6 @@ DaVinci().Simulation             = True
 # updated Again
 DaVinci().UserAlgorithms = [ D2PimumuOSTuple ]
 DaVinci().InputType = "DST" 
-DaVinci().Input = ["DATAFILE='PFN:/var/pcjm/r02/lhcb/cliff/DSTs/MC_Dp_pipmumu/00024917_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 # Database tags
 if year == "12":

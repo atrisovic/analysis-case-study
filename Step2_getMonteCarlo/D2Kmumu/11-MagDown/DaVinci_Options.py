@@ -6,7 +6,6 @@ from Configurables import DaVinci
 
 # Stripping 21
 KMuMuOSlocation = 'Phys/D2XMuMu_KOSLine/Particles'
-
 # Stripping 21r1:
 
 # Phys/D2XMuMu_KOSLine/Particles 
@@ -102,11 +101,12 @@ magPol = "Down"
 year = "11" 
 
 DaVinci().RootInTES = rootInTes
-DaVinci().TupleFile     = "MC_D2KMuMu11down_NTuples.root" 
-
+DaVinci().TupleFile     = "MC_D2KMuMu11down_NTuples.root"
 DaVinci().EvtMax                 = -1 
 DaVinci().DataType               = "20"+year
 DaVinci().Simulation             = True 
 
 DaVinci().UserAlgorithms = [ D2KmumuOSTuple ]
 DaVinci().InputType = "DST" 
+DaVinci().DDDBtag   ='Sim08-20130503'
+DaVinci().CondDBtag ='Sim08-20130503-vc-md100'

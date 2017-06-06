@@ -1,31 +1,16 @@
-from os import environ
-import GaudiKernel.SystemOfUnits as Units
-
-from Gaudi.Configuration import *
-from Configurables import DaVinci
-
-# Stripping 21
-KMuMuOSlocation = 'Phys/D2XMuMu_KOSLine/Particles'
-
-# Stripping 21r1:
-
-# Phys/D2XMuMu_KOSLine/Particles 
-# Phys/D2XMuMu_KSSLine/Particles 
-
-# Source: http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/stripping/config/stripping21/index.html#charm
-
-rootInTes = "/Event/AllStreams"
-
-#----------------------------------------
-# 1) The code that makes the ntuple
-#----------------------------------------
-
+from DecayTreeTuple.Configuration import *
 from Configurables import DecayTreeTuple, LoKi__Hybrid__TupleTool, TupleToolDecay, TupleToolTrigger, TupleToolTISTOS, TupleToolSelResults, TupleToolTrackInfo, TupleToolEventInfo, TupleToolVtxIsoln, TupleToolTrackIsolation, TupleToolAngles, TupleToolRecoStats
 
-tuple = DecayTreeTuple()
+# Stream and stripping line we want to use
+stream = 'AllStreams'
+line = 'D2XMuMu_KOSLine'
 
-tuple.ToolList += [
+# Create an ntuple to capture D*+ decays from the StrippingLine line
+dtt = DecayTreeTuple('D2KmumuOSTuple')
+dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
 
+dtt.Decay = '[D+ -> ^K+ ^mu+ ^mu-]CC'
+dtt.ToolList += [
     "TupleToolGeometry"
     , "TupleToolKinematic"
     , "TupleToolPropertime"
@@ -34,29 +19,25 @@ tuple.ToolList += [
     , "TupleToolEventInfo"
     , "TupleToolTrackInfo"
     , "TupleToolTrigger"
-    , "TupleToolTISTOS"
     , "TupleToolAngles"
-    , "TupleToolVtxIsoln"
+#    , "TupleToolVtxIsoln"
     , "TupleToolTrackIsolation"
     , "TupleToolTrigger"
     , "TupleToolTISTOS"
     , "TupleToolEventInfo"
     , "TupleToolRecoStats"
-    
     ]
 
-# Configure the TupleToolTISTOS (this controls how much trigger information goes into the ntuple)
-tuple.addTool(TupleToolTISTOS("TupleToolTISTOS"))
-tuple.TupleToolTISTOS.OutputLevel = 3
-tuple.TupleToolTISTOS.VerboseL0 = 1
-tuple.TupleToolTISTOS.VerboseHlt1 = 1
-tuple.TupleToolTISTOS.VerboseHlt2 = 1
-tuple.TupleToolTISTOS.TriggerList=[
-
+dtt.addTool(TupleToolTISTOS("TupleToolTISTOS"))
+dtt.TupleToolTISTOS.OutputLevel = 3
+dtt.TupleToolTISTOS.VerboseL0 = 1
+dtt.TupleToolTISTOS.VerboseHlt1 = 1
+dtt.TupleToolTISTOS.VerboseHlt2 = 1
+dtt.TupleToolTISTOS.TriggerList=[
   'L0DiMuonDecision'
     ,'L0MuonDecision'
     ,'L0MuonHighDecision'
-  
+
     ,'Hlt1DiMuonHighMassDecision'
     ,'Hlt1DiMuonLowMassDecision'
     ,'Hlt1SingleMuonHighPTDecision'
@@ -74,39 +55,43 @@ tuple.TupleToolTISTOS.TriggerList=[
     ,'Hlt2DiMuonDetachedDecision'
     ,'Hlt2DiMuonDetachedHeavyDecision'
     ,'Hlt2DiMuonBDecision'
+
     ,'Hlt2DiMuonLowMassDecision'
     ,'Hlt2DiMuonDecision'
     ,'Hlt2CharmSemilepD2HMuMuDecision'
     ,'Hlt2CharmSemilepD2HMuMuWideMassDecision'
+
   ]
 
 LoKi_Vars = LoKi__Hybrid__TupleTool("LoKi_Vars")
 LoKi_Vars.Variables =  {
+            "LoKi_BPVVDCHI2"    : "BPVVDCHI2"
+          , "LoKi_BPVIPCHI2"    : "BPVIPCHI2()"
+          , "LoKi_DOCA"         : "DOCA(1,2)"
+          , "LoKi_BPVLTIME"     : "BPVLTIME()"
+          }
 
-    "LoKi_BPVVDCHI2"    : "BPVVDCHI2"    
-    , "LoKi_BPVIPCHI2"    : "BPVIPCHI2()"
-    , "LoKi_DOCA"         : "DOCA(1,2)"
-    , "LoKi_BPVLTIME"     : "BPVLTIME()"
 
-    }
+dtt.addBranches({"D" :  "[D+ -> K+ mu+ mu-]CC"} )
 
-D2KmumuOSTuple = tuple.clone("D2KmumuOSTuple") 
-D2KmumuOSTuple.Inputs = [ KMuMuOSlocation ] 
-D2KmumuOSTuple.Decay = "[D+ -> K+ mu+ mu-]CC" 
-D2KmumuOSTuple.Branches = { "D" :  "[D+ -> K+ mu+ mu-]CC" } 
+from Configurables import DaVinci
 
-D2KmumuOSTuple.addTool(TupleToolDecay, name="D+") 
-D2KmumuOSTuple.P2PVInputLocations = ["Phys/D2XMuMu_KOSLine/Particle2VertexRelations"]
+# Configure DaVinci
+DaVinci().UserAlgorithms += [dtt]
+DaVinci().InputType = 'DST'
+DaVinci().TupleFile = 'MCDKmumu11-Down.root'
+DaVinci().PrintFreq = 1000
+DaVinci().DataType = '2011'
+DaVinci().Simulation = True
+# Only ask for luminosity information when not using simulated data
+DaVinci().Lumi = DaVinci().Simulation
+DaVinci().EvtMax = -1
+DaVinci().CondDBtag = 'Sim08-20130503-vc-md100'
+DaVinci().DDDBtag = 'Sim08-20130503'
 
-magPol = "Down" 
-year = "11" 
+#from GaudiConf import IOHelper
 
-DaVinci().RootInTES = rootInTes
-DaVinci().TupleFile     = "MC_D2KMuMu11down_NTuples.root" 
-
-DaVinci().EvtMax                 = -1 
-DaVinci().DataType               = "20"+year
-DaVinci().Simulation             = True 
-
-DaVinci().UserAlgorithms = [ D2KmumuOSTuple ]
-DaVinci().InputType = "DST" 
+# Use the local input data
+#IOHelper().inputFiles([
+#    './00024919_00000001_1.allstreams.dst'
+#], clear=True)

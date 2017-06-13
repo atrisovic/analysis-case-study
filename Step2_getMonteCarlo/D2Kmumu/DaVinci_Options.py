@@ -79,9 +79,9 @@ from Configurables import DaVinci
 # Configure DaVinci
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'MCDKmumu11-Up.root'
+DaVinci().TupleFile = 'MCDKmumu12-Up.root'
 DaVinci().PrintFreq = 1000
-DaVinci().DataType = '2011'
+DaVinci().DataType = '2012'
 DaVinci().Simulation = True
 # Only ask for luminosity information when not using simulated data
 DaVinci().Lumi = DaVinci().Simulation

@@ -1,22 +1,20 @@
-#######################################################################
 from os import environ
 import GaudiKernel.SystemOfUnits as Units
-
 from Gaudi.Configuration import *
+from Configurables import DecayTreeTuple, LoKi__Hybrid__TupleTool, TupleToolDecay, TupleToolTrigger, TupleToolTISTOS, TupleToolSelResults, TupleToolTrackInfo, TupleToolEventInfo, TupleToolVtxIsoln, TupleToolTrackIsolation, TupleToolAngles, TupleToolRecoStats
+from DecayTreeTuple.Configuration import *
 
-from Configurables import DaVinci
-
-# Stripping 21
 PiMuMuOSlocation = 'Phys/D2XMuMu_PiOSLine/Particles'
-
-# Stripping 21r1:
-
-# Phys/D2XMuMu_KOSLine/Particles 
-# Phys/D2XMuMu_KSSLine/Particles 
-
-# Source: http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/stripping/config/stripping21/index.html#charm
-
 rootInTes = "/Event/AllStreams"
+
+stream = 'AllStreams'
+line = 'D2XMuMu_PiOSLine'
+
+dtt = DecayTreeTuple('D2PimumuOSTuple')
+dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
+
+from Gaudi.Configuration import FileCatalog
+FileCatalog().Catalogs = [ "xmlcatalog_file:/myCatalog.xml" ]
 
 #----------------------------------------
 # 1) The code that makes the ntuple
@@ -24,10 +22,9 @@ rootInTes = "/Event/AllStreams"
 
 from Configurables import DecayTreeTuple, LoKi__Hybrid__TupleTool, TupleToolDecay, TupleToolTrigger, TupleToolTISTOS, TupleToolSelResults, TupleToolTrackInfo, TupleToolEventInfo, TupleToolVtxIsoln, TupleToolTrackIsolation, TupleToolAngles, TupleToolRecoStats
 
-tuple = DecayTreeTuple()
+dtt = DecayTreeTuple()
 
-tuple.ToolList += [
-
+dtt.ToolList += [
     "TupleToolGeometry"
     , "TupleToolKinematic"
     , "TupleToolPropertime"
@@ -47,16 +44,12 @@ tuple.ToolList += [
     
     ]
 
-# Configure the TupleToolTISTOS (this controls how much trigger information goes into the ntuple)
-tuple.addTool(TupleToolTISTOS("TupleToolTISTOS"))
-tuple.TupleToolTISTOS.OutputLevel = 3
-tuple.TupleToolTISTOS.VerboseL0 = 1
-tuple.TupleToolTISTOS.VerboseHlt1 = 1
-tuple.TupleToolTISTOS.VerboseHlt2 = 1
-tuple.TupleToolTISTOS.TriggerList=[
-
-#page 51 (and 97 for e)
-
+dtt.addTool(TupleToolTISTOS("TupleToolTISTOS"))
+dtt.TupleToolTISTOS.OutputLevel = 3
+dtt.TupleToolTISTOS.VerboseL0 = 1
+dtt.TupleToolTISTOS.VerboseHlt1 = 1
+dtt.TupleToolTISTOS.VerboseHlt2 = 1
+dtt.TupleToolTISTOS.TriggerList=[
   'L0DiMuonDecision'
     ,'L0MuonDecision'
     ,'L0MuonHighDecision'
@@ -95,45 +88,24 @@ LoKi_Vars.Variables =  {
 
     }
 
-D2PimumuOSTuple = tuple.clone("D2PimumuOSTuple") 
-D2PimumuOSTuple.Inputs = [ PiMuMuOSlocation ] 
-D2PimumuOSTuple.Decay = "[D+ -> ^pi+ ^mu+ ^mu-]CC" 
-D2PimumuOSTuple.Branches = { "D" :  "[D+ -> pi+ mu+ mu-]CC"} 
+dtt.Decay = "[D+ -> ^pi+ ^mu+ ^mu-]CC" 
+dtt.addBranches({ "D" :  "[D+ -> pi+ mu+ mu-]CC"}) 
 
-D2PimumuOSTuple.addTool(TupleToolDecay, name="D+") 
-D2PimumuOSTuple.P2PVInputLocations = ["Phys/D2XMuMu_PiOSLine/Particle2VertexRelations"]
+from Configurables import DaVinci
 
-#----------------------------------------                                                                
-# 2) Run within DaVinci                                                 
-#----------------------------------------
+magPol = "Up" 
+year = "12" 
 
-magPol = "Down" 
-year = "11" 
+DaVinci().UserAlgorithms += [dtt]
+DaVinci().TupleFile = "MC_D2PiMuMu"+year+"_Mag"+magPol+"_NTuples.root" 
+DaVinci().PrintFreq = 1000
 
-DaVinci().RootInTES = rootInTes
-DaVinci().TupleFile     = "MC_D2PiMuMu"+year+"_Mag"+magPol+"_NTuples.root" 
-
-DaVinci().EvtMax                 = -1 
-DaVinci().DataType               = "20"+year
-DaVinci().Simulation             = True 
-
-# updated Again
-DaVinci().UserAlgorithms = [ D2PimumuOSTuple ]
+DaVinci().EvtMax = 100 
+DaVinci().DataType = "20"+year
+DaVinci().Simulation = True 
+DaVinci().Lumi = DaVinci().Simulation
 DaVinci().InputType = "DST" 
 
-# Database tags
-if year == "12":
-	if magPol == "Up":
-		DaVinci().DDDBtag   ='Sim08-20130503-1'
-                DaVinci().CondDBtag ='Sim08-20130503-1-vc-mu100'
-	else:
-		DaVinci().DDDBtag   ='Sim08-20130503-1'
-                DaVinci().CondDBtag ='Sim08-20130503-1-vc-md100'
-if year == "11":
-	if magPol == "Up":
-		DaVinci().DDDBtag   ='Sim08-20130503'
-                DaVinci().CondDBtag ='Sim08-20130503-vc-mu100'
-	else:
-		DaVinci().DDDBtag   ='Sim08-20130503'
-                DaVinci().CondDBtag ='Sim08-20130503-vc-md100'
+DaVinci().DDDBtag   ='Sim08-20130503-1'
+DaVinci().CondDBtag ='Sim08-20130503-1-vc-mu100'
 

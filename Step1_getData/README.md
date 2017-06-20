@@ -44,6 +44,13 @@ ganga Ganga_Options.py
 or inside `ganga`
 `execfile("Ganga_File.py")`
 
+## Error
+```
+Cannot find project 'Ganga'
+```
+## Solution
+Just run `ganga` without lb-run/SetupProject.
+
 # Fixing failed jobs
 
 Identify failed jobs: `jobs(ID).subjobs`

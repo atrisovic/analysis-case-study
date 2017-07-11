@@ -218,7 +218,7 @@ int TMVAClassification( TString myMethodList = "" )
 
    // Read training and test data
    // (it is also possible to use ASCII format as input -> see TMVA Users Guide)
-   TString fnameMC = "D2KMuMuOS_NTuple_Reduced.root";
+   TString fnameMC = "MC-D2KMuMuOS.root";
    TString fnameRD = "/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2KMuMuOS.root";
 
    if (gSystem->AccessPathName( fnameMC ))  // file does not exist in local directory
@@ -270,8 +270,7 @@ int TMVAClassification( TString myMethodList = "" )
    // To also specify the number of testing events, use:
    //    factory->PrepareTrainingAndTestTree( mycut,
    //                                         "NSigTrain=3000:NBkgTrain=3000:NSigTest=3000:NBkgTest=3000:SplitMode=Random:!V" );
-   factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=1000:nTrain_Background=1000:SplitMode=Random:NormMode=NumEvents:!V" );
+   factory->PrepareTrainingAndTestTree( mycuts, mycutb, "SplitMode=Random:NormMode=NumEvents:!V" );
 
    // ---- Book MVA methods
    //

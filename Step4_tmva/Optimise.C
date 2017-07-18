@@ -9,10 +9,17 @@ using namespace TMath;
 using namespace std;
 
 // Set to true to make plots of the mass distribution for each BDT and PID cut
-bool PlotMass = false;
+bool PlotMass = true;
+string bachelor = "Pi";
 
 // Get the data
+//TFile f1 = TFile();
+//if (bachelor=="Pi"){TFile f1(TString("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2"+bachelor+"MuMuOS.root"), "read");}
+//if (bachelor=="K"){TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step2_getMonteCarlo/D2Kmumu/ReduceMCKmumu/MCKMuMu-all.root", "read");}
+
 TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
+///eos/lhcb/user/a/atrisovi/analysis-case-study/Step2_getMonteCarlo/D2Kmumu/D2KMuMuOS.root", "read");
+//TFile f1(TString("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2"+bachelor+"MuMuOS.root"), "read");
 
 RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig, RooRealVar* nBkg) {
 
@@ -56,7 +63,7 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooDataSet* Data, RooAddPdf* 
 
     TCanvas c("c", "c", 800, 800);
     frame->Draw();
-    c.SaveAs(TString("mass_plots/optimisation_BDT_"+to_string(BDT_cut)+"_PID_"+to_string(PID_cut)+".pdf"));
+    c.SaveAs(TString("mass_plots/optimisation_BDT_"+to_string(BDT_cut)+"_PID_"+to_string(PID_cut)+"_"+bachelor+".pdf"));
   }
 
   return FitResult;
@@ -100,7 +107,7 @@ double InvMass_mumu(RooDataSet* Data, int i) {
 
 void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
     // Plot m(mumu)
-    RooPlot* frame = MuMuMass->frame(850,2000,100);
+    RooPlot* frame = MuMuMass->frame(250,2000,100);
     Data->plotOn(frame);
     
     frame->SetXTitle("m(#mu#mu) [MeV/c^2]");
@@ -108,7 +115,7 @@ void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
 
     TCanvas c("c", "c", 800, 800);
     frame->Draw();
-    c.SaveAs("MuMuMass.pdf");
+    c.SaveAs(TString("MuMuMass_"+bachelor+".pdf"));
 }
 
 
@@ -121,7 +128,7 @@ void Plot(int numIters, Double_t BDT_cuts[numIters], Double_t Significance_FoM[n
 
   TCanvas c("c", "c", 800, 800);
   gr->Draw("AP");
-  c.SaveAs("Optimisation.pdf");
+  c.SaveAs(TString("Optimisation_"+bachelor+".pdf"));
 
 }
 
@@ -130,7 +137,7 @@ void Plot(TH2D* h) {
   h->SetTitle("Significance; BDT cut; PIDmu cut");
   h->SetStats(0);
   h->Draw("COLZ");
-  c.SaveAs("2D_Optimisation.pdf");
+  c.SaveAs(TString("2D_Optimisation_"+bachelor+".pdf"));
 }
 
 
@@ -144,6 +151,7 @@ void Optimise()
 
   // Get the tree
   TTree* D2PimumuTree = (TTree*) f1.Get("D2PimumuOSTuple/DecayTree"); 
+  //TTree* D2PimumuTree = (TTree*) f1.Get("D2KmumuOSTuple/DecayTree"); 
  
   // Disable all branches and only enable ones we need
   D2PimumuTree->SetBranchStatus("*",0);
@@ -157,6 +165,16 @@ void Optimise()
   D2PimumuTree->SetBranchStatus("muminus_PZ",1);
   D2PimumuTree->SetBranchStatus("muplus_PIDmu",1);
   D2PimumuTree->SetBranchStatus("muminus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("muplus_isMuon",1);
+  D2PimumuTree->SetBranchStatus("muminus_isMuon",1);
+  if (bachelor=="Pi") {
+    D2PimumuTree->SetBranchStatus("piplus_PIDmu",1);
+    D2PimumuTree->SetBranchStatus("piplus_PIDK",1);
+  }
+
+  double BDT_initial;
+  if (bachelor=="Pi") { BDT_initial=0.0; }
+  if (bachelor=="K") { BDT_initial=0.0; }
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
@@ -169,10 +187,19 @@ void Optimise()
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
   RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", -1e9, 1e9);
   RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", -1e9, 1e9);
+  RooRealVar* piplus_PIDK = new RooRealVar("piplus_PIDK", "piplus_PIDK", -1e9, 0.);
+  RooRealVar* piplus_PIDmu = new RooRealVar("piplus_PIDmu", "piplus_PIDmu", -1e9, 0.);
+  RooRealVar* muplus_isMuon = new RooRealVar("muplus_isMuon", "muplus_isMuon", 0.9, 1.1);
+  RooRealVar* muminus_isMuon = new RooRealVar("muminus_isMuon", "muminus_isMuon", 0.9, 1.1);
+
 
   // Create the RooArgSet that holds the variables
   RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ, *muplus_PIDmu);
   D2PimumuSet.add(*muminus_PIDmu);
+  D2PimumuSet.add(*piplus_PIDK);
+  D2PimumuSet.add(*piplus_PIDmu);
+  D2PimumuSet.add(*muplus_isMuon);
+  D2PimumuSet.add(*muminus_isMuon);
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 

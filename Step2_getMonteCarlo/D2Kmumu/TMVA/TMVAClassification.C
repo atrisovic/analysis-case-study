@@ -164,7 +164,7 @@ int TMVAClassification( TString myMethodList = "" )
    // --- Here the preparation phase begins
 
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "TMVA_D2PiMuMu12_MagDown_withLogVars.root" );
+   TString outfileName( "TMVA_D2KMuMu_withLogVars.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
    // Create the factory object. Later you can choose the methods
@@ -191,10 +191,10 @@ int TMVAClassification( TString myMethodList = "" )
    factory->AddVariable( "D_dira := D_DIRA_OWNPV", 'F' );
    factory->AddVariable( "D_ipchi := D_IPCHI2_OWNPV", 'F' );
    factory->AddVariable( "D_edchi := D_ENDVERTEX_CHI2", 'F' );
-   factory->AddVariable( "pi_pt := piplus_PT", 'F' );
+   factory->AddVariable( "k_pt := Kplus_PT", 'F' );
    
-   factory->AddVariable( "pi_ipchi := log(piplus_IPCHI2_OWNPV)", 'F' );
-   factory->AddVariable( "pi_p := log(piplus_P)", 'F' );
+   factory->AddVariable( "k_ipchi := log(Kplus_IPCHI2_OWNPV)", 'F' );
+   factory->AddVariable( "k_p := log(Kplus_P)", 'F' );
 
    factory->AddVariable( "max_mu_p := max(muminus_P, muplus_P)", 'F' );
    factory->AddVariable( "min_mu_p := min(muminus_P, muplus_P)", 'F' );
@@ -218,47 +218,30 @@ int TMVAClassification( TString myMethodList = "" )
 
    // Read training and test data
    // (it is also possible to use ASCII format as input -> see TMVA Users Guide)
-   TString fnameMC_MD_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu11_MagDown_NTuples_fin.root";
-   TString fnameMC_MU_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu11_MagUp_NTuples_fin.root";
-   TString fnameMC_MD_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
-   TString fnameMC_MU_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagUp_NTuples_fin.root";
-   TString fnameRD = "/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root";
-   //TString fnameMC = "../Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
-   //TString fnameRD = "../Ntuples/D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root";
+   TString fnameMC = "MC-D2KMuMuOS.root";
+   TString fnameRD = "/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2KMuMuOS.root";
 
-   if (gSystem->AccessPathName( fnameMC_MD_11 ))  // file does not exist in local directory
+   if (gSystem->AccessPathName( fnameMC ))  // file does not exist in local directory
       gSystem->Exec("curl -O http://root.cern.ch/files/tmva_class_example.root");
    if (gSystem->AccessPathName( fnameRD ))  // file does not exist in local directory
       gSystem->Exec("curl -O http://root.cern.ch/files/tmva_class_example.root");
 
-   TFile *input_MD_11 = TFile::Open( fnameMC_MD_11 );
-   TFile *input_MU_11 = TFile::Open( fnameMC_MU_11 );
-   TFile *input_MD_12 = TFile::Open( fnameMC_MD_12 );
-   TFile *input_MU_12 = TFile::Open( fnameMC_MU_12 );
-   std::cout << "--- TMVAClassification       : Using input files: " << input_MD_11->GetName() << std::endl
-                                                                     << input_MU_11->GetName() << std::endl
-                                                                     << input_MD_12->GetName() << std::endl
-                                                                     << input_MU_12->GetName() << std::endl;
-   TTree *signal_MD_11 = (TTree*)input_MD_11->Get("D2PimumuOSTuple/DecayTree");
-   TTree *signal_MU_11 = (TTree*)input_MU_11->Get("D2PimumuOSTuple/DecayTree");
-   TTree *signal_MD_12 = (TTree*)input_MD_12->Get("D2PimumuOSTuple/DecayTree");
-   TTree *signal_MU_12 = (TTree*)input_MU_12->Get("D2PimumuOSTuple/DecayTree");
+   TFile *input_MD = TFile::Open( fnameMC );
+   std::cout << "--- TMVAClassification       : Using input files: " << input_MD->GetName() << std::endl;
+   TTree *signal_MD = (TTree*)input_MD->Get("D2KmumuOSTuple/DecayTree");
 
    // --- Register the training and test trees
    
    TFile *input1 = TFile::Open( fnameRD );
    std::cout << "--- TMVAClassification       : Using input file: " << input1->GetName() << std::endl;
-   TTree *background = (TTree*)input1->Get("D2PimumuOSTuple/DecayTree");
+   TTree *background = (TTree*)input1->Get("D2KmumuOSTuple/DecayTree");
    
    // global event weights per tree (see below for setting event-wise weights)
    Double_t signalWeight     = 1.0;
    Double_t backgroundWeight = 1.0;
    
    // You can add an arbitrary number of signal or background trees
-   factory->AddSignalTree    ( signal_MD_11,    signalWeight     );
-   factory->AddSignalTree    ( signal_MU_11,    signalWeight     );
-   factory->AddSignalTree    ( signal_MD_12,    signalWeight     );
-   factory->AddSignalTree    ( signal_MU_12,    signalWeight     );
+   factory->AddSignalTree    ( signal_MD,    signalWeight     );
    factory->AddBackgroundTree( background,      backgroundWeight );
    
    // To give different trees for training and testing, do as follows:
@@ -287,8 +270,8 @@ int TMVAClassification( TString myMethodList = "" )
    // To also specify the number of testing events, use:
    //    factory->PrepareTrainingAndTestTree( mycut,
    //                                         "NSigTrain=3000:NBkgTrain=3000:NSigTest=3000:NBkgTest=3000:SplitMode=Random:!V" );
-   factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "SplitMode=Random:NormMode=NumEvents:!V" );
+   factory->PrepareTrainingAndTestTree( mycuts, mycutb, "SplitMode=Random:NormMode=NumEvents:!V" );
+
    // ---- Book MVA methods
    //
    // Please lookup the various method configuration options in the corresponding cxx files, eg:

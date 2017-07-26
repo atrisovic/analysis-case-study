@@ -8,6 +8,8 @@ using namespace TMath;
 using namespace std;
 
 // Get the data
+//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
+//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
 TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
 
 RooWorkspace* GetWorkspace(std::string file_location) {
@@ -133,6 +135,7 @@ void OSMassFit()
 
   // Get the tree
   TTree* D2PimumuTree = (TTree*) f1.Get("D2PimumuOSTuple/DecayTree"); 
+  //TTree* D2PimumuTree = (TTree*) f1.Get("DecayTree"); 
  
   // Disable all branches and only enable ones we need
   D2PimumuTree->SetBranchStatus("*",0);
@@ -146,6 +149,10 @@ void OSMassFit()
   D2PimumuTree->SetBranchStatus("muminus_PZ",1);
   D2PimumuTree->SetBranchStatus("muplus_PIDmu",1);
   D2PimumuTree->SetBranchStatus("muminus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("muplus_isMuon",1);
+  D2PimumuTree->SetBranchStatus("muminus_isMuon",1);
+  D2PimumuTree->SetBranchStatus("piplus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("piplus_PIDK",1);
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
@@ -156,12 +163,20 @@ void OSMassFit()
   RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
   RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
-  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 1., 1e9);
-  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 1., 1e9);
+  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 3., 1e9);
+  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 3., 1e9);
+  RooRealVar* piplus_PIDK = new RooRealVar("piplus_PIDK", "piplus_PIDK", -1e9, 0.);
+  RooRealVar* piplus_PIDmu = new RooRealVar("piplus_PIDmu", "piplus_PIDmu", -1e9, 0.);
+  RooRealVar* muplus_isMuon = new RooRealVar("muplus_isMuon", "muplus_isMuon", 0.9, 1.1);
+  RooRealVar* muminus_isMuon = new RooRealVar("muminus_isMuon", "muminus_isMuon", 0.9, 1.1);
 
   // Create the RooArgSet that holds the variables
   RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ, *muplus_PIDmu);
   D2PimumuSet.add(*muminus_PIDmu);
+  D2PimumuSet.add(*piplus_PIDK);
+  D2PimumuSet.add(*piplus_PIDmu);
+  D2PimumuSet.add(*muplus_isMuon);
+  D2PimumuSet.add(*muminus_isMuon);
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 

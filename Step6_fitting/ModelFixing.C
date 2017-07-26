@@ -1,5 +1,4 @@
-//#include "../Step5_fitting/RootHeaders.h"
-#include "../Step4_tmva/RooFitHeaders.h"
+#include "RooFitHeaders.h"
 #include "iostream"
 #include "fstream"
 #include <math.h>
@@ -9,6 +8,8 @@ using namespace TMath;
 using namespace std;
 
 // Get the data
+//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
+//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
 TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
 
 RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealVar* nSig_Ds, RooRealVar* nBkg) {
@@ -44,7 +45,7 @@ RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealVar* nSig_D
   
   
   // Exponential background model
-  RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.001, -1, 0.1, "c^{2}/MeV");
+  RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.001, -1, 1, "c^{2}/MeV");
   RooExponential *CombBG_PDF = new RooExponential("CombBG_PDF", "CombBG_PDF", *D_MM, *K_CombBG);
 
   return new RooAddPdf("Model", "Model", RooArgList(*signal_model_Dp, *signal_model_Ds, *CombBG_PDF), RooArgList(*nSig_Dp, *nSig_Ds, *nBkg));
@@ -147,6 +148,7 @@ void ModelFixing()
 
   // Get the tree
   TTree* D2PimumuTree = (TTree*) f1.Get("D2PimumuOSTuple/DecayTree"); 
+  //TTree* D2PimumuTree = (TTree*) f1.Get("DecayTree"); 
  
   // Disable all branches and only enable ones we need
   D2PimumuTree->SetBranchStatus("*",0);
@@ -160,6 +162,10 @@ void ModelFixing()
   D2PimumuTree->SetBranchStatus("muminus_PZ",1);
   D2PimumuTree->SetBranchStatus("muplus_PIDmu",1);
   D2PimumuTree->SetBranchStatus("muminus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("muplus_isMuon",1);
+  D2PimumuTree->SetBranchStatus("muminus_isMuon",1);
+  D2PimumuTree->SetBranchStatus("piplus_PIDmu",1);
+  D2PimumuTree->SetBranchStatus("piplus_PIDK",1);
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
@@ -170,12 +176,20 @@ void ModelFixing()
   RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
   RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
-  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 1., 1e9);
-  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 1., 1e9);
+  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 2., 1e9);
+  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 2., 1e9);
+  RooRealVar* piplus_PIDK = new RooRealVar("piplus_PIDK", "piplus_PIDK", -1e9, 0.);
+  RooRealVar* piplus_PIDmu = new RooRealVar("piplus_PIDmu", "piplus_PIDmu", -1e9, 0.);
+  RooRealVar* muplus_isMuon = new RooRealVar("muplus_isMuon", "muplus_isMuon", 0.9, 1.1);
+  RooRealVar* muminus_isMuon = new RooRealVar("muminus_isMuon", "muminus_isMuon", 0.9, 1.1);
 
   // Create the RooArgSet that holds the variables
   RooArgSet D2PimumuSet(*D_MM, *BDT, *muplus_PX, *muplus_PY, *muplus_PZ, *muminus_PX, *muminus_PY, *muminus_PZ, *muplus_PIDmu);
   D2PimumuSet.add(*muminus_PIDmu);
+  D2PimumuSet.add(*piplus_PIDK);
+  D2PimumuSet.add(*piplus_PIDmu);
+  D2PimumuSet.add(*muplus_isMuon);
+  D2PimumuSet.add(*muminus_isMuon);
   RooDataSet *All_Data = new RooDataSet("All_Data", "All_Data", D2PimumuSet, Import(*D2PimumuTree));
   All_Data->Print();
 
@@ -192,9 +206,9 @@ void ModelFixing()
   RooDataSet* Data_Reduced = (RooDataSet*)All_Data->reduce("MuMuMass>850&&MuMuMass<1250");
   Data_Reduced->Print();
 
-  RooRealVar *nSig_Dp = new RooRealVar("nSig_Dp", "D+ Signal Yield", 2.e4, 0., 1e6);
-  RooRealVar *nSig_Ds = new RooRealVar("nSig_Ds", "Ds Signal Yield", 6.e4, 0., 1e6);
-  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 1.e5, 0., 1e6);
+  RooRealVar *nSig_Dp = new RooRealVar("nSig_Dp", "D+ Signal Yield", 2.e4, -1.e3, 1e6);
+  RooRealVar *nSig_Ds = new RooRealVar("nSig_Ds", "Ds Signal Yield", 2.e4, -1.e3, 1e6);
+  RooRealVar *nBkg = new RooRealVar("nBkg", "Background Yield", 2.e4, 0., 1e6);
   
   // Create fit model
   RooAddPdf *Model = CreateModel(D_MM, nSig_Dp, nSig_Ds, nBkg);

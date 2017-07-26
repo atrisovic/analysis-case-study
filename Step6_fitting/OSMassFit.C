@@ -163,8 +163,8 @@ void OSMassFit()
   RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
   RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
-  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 3., 1e9);
-  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 3., 1e9);
+  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 2., 1e9);
+  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 2., 1e9);
   RooRealVar* piplus_PIDK = new RooRealVar("piplus_PIDK", "piplus_PIDK", -1e9, 0.);
   RooRealVar* piplus_PIDmu = new RooRealVar("piplus_PIDmu", "piplus_PIDmu", -1e9, 0.);
   RooRealVar* muplus_isMuon = new RooRealVar("muplus_isMuon", "muplus_isMuon", 0.9, 1.1);

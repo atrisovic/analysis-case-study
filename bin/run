@@ -1,0 +1,162 @@
+#!/bin/env python
+
+import io
+import os
+import re
+import sys
+import ConfigParser
+
+# Produce a configuration object from a configuration file.
+def getconfig( infile ):
+    if not infile:
+        return None
+
+    config = ConfigParser.RawConfigParser()
+    config.optionxform = str
+
+    try:
+        config.read( infile )
+    except ConfigParser.MissingSectionHeaderError:
+        with open( infile ) as f:
+            content = str( f.read() )
+            # Eliminate all lines with multiple -----.
+            content = re.sub( r'\n-+', '', content )
+            config.readfp( io.BytesIO( '[dummy_section]\n' + re.sub( '^-\+\n', '', content ) ) )
+
+    dic = {}
+    for section in config.sections():
+        if section == 'dummy_section':
+            for key, value in config.items( 'dummy_section' ):
+                dic.update( { key : value.replace( '\n', ' ' ) } )
+        else:
+            dic.update( { section : {} } )
+            for key, value in config.items( section ):
+                dic.get( section ).update( { key : value.replace( '\n', ' ' ) } )
+
+    return dic
+
+
+# Take dictionary dic, replace any instance of src with dic value in dest key.
+def dictreplace( dic, src, dest ):
+    ret = {}
+    for k, v in dic.iteritems():
+        if isinstance( v, dict ):
+            ret.update( { k : dictreplace( v, src, dest ) } )
+        elif isinstance( v, str ):
+            ret.update( { k : v.replace( src, str( dest ) ) } )
+        else:
+            ret.update( { k : v } )
+
+    return ret
+
+
+def haskey( map, path ):
+    orig = map
+    try:
+        maps = path.split( ':' )
+        for m in maps:
+            map = map.get( m )
+    except:
+        return False
+
+    if not map:
+        return False
+
+    return True
+
+
+def mapget( map, path ):
+    maps = [ it for it in path.split( ':' ) if it ]
+    for m in maps:
+        map = map.get( m )
+
+    return map
+
+
+def unfold( dic, original = None ):
+    if not original:
+        original = dic
+
+    ret = {}
+    for k, v in dic.iteritems():
+        if isinstance( v, dict ):
+            ret.update( { k : unfold( v, original ) } )
+        elif isinstance( v, str ):
+            val = v
+            while re.search( '{(.*?)}', val ):
+                expand = re.search( '{(.*?)}', val ).expand( '\g<1>' )
+                prefix = ':'.join( expand.split( ':' )[ : -1 ] )
+                suffix =           expand.split( ':' )[   -1 ]
+                if haskey( dic, expand ):
+                    expandval = mapget( dic, expand )
+                elif original and haskey( original, expand ):
+                    expandval = unfold( mapget( original, prefix ), original ).get( suffix )
+                elif original and original.has_key( 'generic' ) and haskey( original.get( 'generic' ), expand ):
+                    expandval = mapget( original.get( 'generic' ), expand )
+                else:
+                    raise BaseException( '\x1b[91mKey \x1b[1m%s\x1b[21m not found in %s.\x1b[0m' % ( expand, original ) )
+                val = val.replace( '{%s}' % expand, expandval )
+            ret.update( { k : parse( val ) } )
+        else:
+            ret.update( { k : v } )
+
+    return ret
+
+
+def parse( cmd ):
+    if not isinstance( cmd, str ):
+        return cmd
+
+    if not re.search( '(.*?)\((.*)\)', cmd ):
+        return cmd
+
+    match = re.search( '(.*?)\((.*)\)', cmd.strip() )
+    function = match.group( 1 )
+    args     = match.group( 2 )
+
+    match = re.search( '(.*?)\((.*)\)', args )
+    if match:
+        args = re.sub( '(.*?)\((.*)\)', parse( match.group() ), args )
+
+    if ( function == 'existing' ):
+        paths = [ arg.strip() for arg in args.split( ',' ) ]
+        for path in paths:
+            if os.path.exists( path ):
+                return path
+        raise BaseException( '\x1b[91mNone of the paths \x1b[1m%s\x1b[21m exists.\x1b[0m' % paths )
+
+    if ( function == 'prependeos' ):
+        path = args.split( ',' )[ 0 ].strip()
+        pref = args.split( ',' )[ 1 ].strip()
+        if path.startswith( '/eos' ):
+            return pref + path
+        else:
+            return path
+
+    return cmd
+
+
+versions = unfold( getconfig( 'cfg/versions' ) )
+
+cmtcfg   = versions.get( 'cmtcfg' )
+rootver  = versions.get( 'root'   )
+
+try:
+    component = unfold( getconfig( 'cfg/components.cfg' ) ).get( sys.argv[ 1 ] )
+except BaseException, ex:
+    print ex
+    sys.exit( 1 )
+
+command = component.get( 'cmd' ).replace( '$', '\$' )
+fullcmd = 'lb-run -c %s root/%s %s' % ( cmtcfg, rootver, command )
+
+# If a working directory has been specified, change to that directory.
+if component.has_key( 'wd' ):
+    fullcmd = 'cd %s; %s' % ( component.get( 'wd' ), fullcmd )
+
+print
+print '\x1b[96m%s\x1b[0m' % fullcmd
+print
+
+sys.exit( os.system( fullcmd ) >> 8 )
+

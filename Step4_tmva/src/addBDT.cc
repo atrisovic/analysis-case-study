@@ -75,25 +75,6 @@ void addBDT( const std::string& datadir )
   Float_t BDT;     //BDTS classifier output
   Float_t var0,var1,var2,var3,var4,var5, var6, var7, var8, var9, var10, var11, var12, var13, var14, var15, spect0,spect1, spect2;
 
-  TFile out( "artifacts/D2PiMuMuOS.root", "recreate" );
-
-  TTree outtree( tname, dname + "/" + tname );
-
-  outtree.Branch( "D_DIRA_OWNPV"       , &D_dira_ownpv       , "D_DIRA_OWNPV/D"        );
-  outtree.Branch( "D_IPCHI2_OWNPV"     , &D_ipchi2_ownpv     , "D_IPCHI2_OWNPV/D"      );
-  outtree.Branch( "D_ENDVERTEX_CHI2"   , &D_endver_chi2      , "D_ENDVERTEX_CHI2/D"    );
-  outtree.Branch( "D_TAU"              , &d_tau              , "D_TAU/D"               );
-  outtree.Branch( "D_MM"               , &d_mm               , "D_MM/D"                );
-  outtree.Branch( "piplus_PT"          , &piplus_pt          , "piplus_PT/D"           );
-  outtree.Branch( "piplus_IPCHI2_OWNPV", &piplus_ipchi2_ownpv, "piplus_IPCHI2_OWNPV/D" );
-  outtree.Branch( "piplus_P"           , &piplus_p           , "piplus_P/D"            );
-  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
-  outtree.Branch( "muplus_P"           , &muplus_p           , "muplus_P/D"            );
-  outtree.Branch( "muplus_PIDmu"       , &muplus_pidmu       , "muplus_PIDmu/D"        );
-  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
-  outtree.Branch( "muminus_PIDmu"      , &muminus_pidmu      , "muminus_PIDmu/D"       );
-  outtree.Branch( "BDT"                , &BDT                , "BDT/F"                 );
-
 
   TString method = "BDT";
   std::cout << "----------------------------------------------------" << std::endl;
@@ -148,6 +129,24 @@ void addBDT( const std::string& datadir )
   TString weightFile = "weights/TMVAClassification_BDT.weights.xml";
   reader->BookMVA( methodName, weightFile );
   Int_t nentries = (Int_t) t->GetEntries();
+
+  TFile out( "artifacts/D2PiMuMuOS.root", "recreate" );
+  TTree outtree( tname, dname + "/" + tname );
+
+  outtree.Branch( "D_DIRA_OWNPV"       , &D_dira_ownpv       , "D_DIRA_OWNPV/D"        );
+  outtree.Branch( "D_IPCHI2_OWNPV"     , &D_ipchi2_ownpv     , "D_IPCHI2_OWNPV/D"      );
+  outtree.Branch( "D_ENDVERTEX_CHI2"   , &D_endver_chi2      , "D_ENDVERTEX_CHI2/D"    );
+  outtree.Branch( "D_TAU"              , &d_tau              , "D_TAU/D"               );
+  outtree.Branch( "D_MM"               , &d_mm               , "D_MM/D"                );
+  outtree.Branch( "piplus_PT"          , &piplus_pt          , "piplus_PT/D"           );
+  outtree.Branch( "piplus_IPCHI2_OWNPV", &piplus_ipchi2_ownpv, "piplus_IPCHI2_OWNPV/D" );
+  outtree.Branch( "piplus_P"           , &piplus_p           , "piplus_P/D"            );
+  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
+  outtree.Branch( "muplus_P"           , &muplus_p           , "muplus_P/D"            );
+  outtree.Branch( "muplus_PIDmu"       , &muplus_pidmu       , "muplus_PIDmu/D"        );
+  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
+  outtree.Branch( "muminus_PIDmu"      , &muminus_pidmu      , "muminus_PIDmu/D"       );
+  outtree.Branch( "BDT"                , &BDT                , "BDT/F"                 );
 
   for (Int_t i = 0; i < nentries; i++)
   {

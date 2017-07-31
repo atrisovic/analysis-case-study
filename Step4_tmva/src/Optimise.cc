@@ -146,6 +146,17 @@ void Plot(TH2D* h) {
 }
 
 
+
+const std::pair< double, double > maxbin( const TH2D& hist )
+{
+  int x, y, z;
+  hist.GetBinXYZ( hist.GetMaximumBin(), x, y, z );
+
+  return std::make_pair( hist.GetXaxis()->GetBinCenter( x ), hist.GetYaxis()->GetBinCenter( y ) );
+}
+
+
+
 void Optimise( const std::string& datadir )
 {
   std::cout << "Hello there" << std::endl;
@@ -299,6 +310,10 @@ void Optimise( const std::string& datadir )
 
   //Plot(numIters, BDT_cuts, Significance_FoM, BDT_cuts_err, Significance_FoM_err);
   Plot(hBDT_PID);
+
+  auto max = maxbin( *hBDT_PID );
+
+  std::cout << max.first << " " << max.second << std::endl;
 
 } // Do something!
 

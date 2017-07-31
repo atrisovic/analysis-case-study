@@ -313,7 +313,10 @@ void Optimise( const std::string& datadir )
 
   auto max = maxbin( *hBDT_PID );
 
-  std::cout << max.first << " " << max.second << std::endl;
+  std::ofstream maxfile( "artifacts/maximum.dat" );
+  maxfile << max.first  << std::endl;
+  maxfile << max.second << std::endl;
+  maxfile.close();
 
 } // Do something!
 

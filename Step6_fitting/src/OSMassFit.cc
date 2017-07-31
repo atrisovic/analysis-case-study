@@ -1,7 +1,16 @@
-#include "RooFitHeaders.h"
-#include "iostream"
-#include "fstream"
-#include <math.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+#include <TAxis.h>
+#include <TFile.h>
+#include <TLine.h>
+#include <TCanvas.h>
+#include <TPad.h>
+#include <TLorentzVector.h>
+#include <TTree.h>
+
+#include "RooFitHeaders.hh"
 
 using namespace RooFit;
 using namespace TMath;
@@ -252,3 +261,11 @@ void OSMassFit()
 
 } // Do something!
 
+
+
+int main( void )
+{
+  OSMassFit(); 
+
+  return 0;
+}

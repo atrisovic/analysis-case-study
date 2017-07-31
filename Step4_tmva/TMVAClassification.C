@@ -218,11 +218,11 @@ int TMVAClassification( TString myMethodList = "" )
 
    // Read training and test data
    // (it is also possible to use ASCII format as input -> see TMVA Users Guide)
-   TString fnameMC_MD_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu11_MagDown_NTuples_fin.root";
-   TString fnameMC_MU_11 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu11_MagUp_NTuples_fin.root";
-   TString fnameMC_MD_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
-   TString fnameMC_MU_12 = "/eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC/MC_D2PiMuMu12_MagUp_NTuples_fin.root";
-   TString fnameRD = "/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root";
+   TString fnameMC_MD_11 = "../montecarlo/MC_D2PiMuMu11_MagDown_NTuples_fin.root";
+   TString fnameMC_MU_11 = "../montecarlo/MC_D2PiMuMu11_MagUp_NTuples_fin.root";
+   TString fnameMC_MD_12 = "../montecarlo/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
+   TString fnameMC_MU_12 = "../montecarlo/MC_D2PiMuMu12_MagUp_NTuples_fin.root";
+   TString fnameRD = "../data/D2PiMuMuOS.root";
    //TString fnameMC = "../Step3_MC/MC_D2PiMuMu12_MagDown_NTuples_fin.root";
    //TString fnameRD = "../Ntuples/D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root";
 

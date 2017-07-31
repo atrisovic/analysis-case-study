@@ -1,18 +1,21 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "root_libs.h"
 #include <vector>
+
 #include "Riostream.h"
 #include "TMVA/Reader.h"
+#include <TTree.h>
+#include <TH2D.h>
+#include <TFile.h>
 
-void addBDT()
+void addBDT( const std::string& datadir )
 {
-  TString fname="../Step3_cuts/D2PiMuMuOS.root";
+  TString fname= datadir + "/D2PiMuMuOS.root";
   TString dname="D2PimumuOSTuple";
   TString tname="DecayTree";
-  Info("addBDT", "Going to add BDT for file  %s \n and tree %s/%s ",
-       fname.Data(), dname.Data(), tname.Data());
+  // Info("addBDT", "Going to add BDT for file  %s \n and tree %s/%s ",
+  //      fname.Data(), dname.Data(), tname.Data());
 
   //Load the file with the ntuple to update
 
@@ -138,8 +141,8 @@ void addBDT()
     var3 = piplus_pt;
     var4 = log(piplus_ipchi2_ownpv);
     var5 = log(piplus_p);
-    var6 = max(muminus_p, muplus_p);
-    var7 = min(muminus_p, muplus_p);
+    var6 = std::max(muminus_p, muplus_p);
+    var7 = std::min(muminus_p, muplus_p);
     //var8 = max(muminus_pt, muplus_pt);
     //var9 = min(muminus_pt, muplus_pt);
     var10 = d_tau;
@@ -167,5 +170,20 @@ void addBDT()
   */
   t->Write("",TObject::kOverwrite);
   f->Close();
-  cout << endl << "-----------------------------------" << endl;
+  std::cout << std::endl << "-----------------------------------" << std::endl;
 }
+
+
+int main( int argc, char** argv )
+{
+  if ( argc < 2 )
+  {
+    std::cerr << "\e[91mNot enough arguments\e[0m" << std::endl;
+    return 1;
+  }
+
+  addBDT( argv[ 1 ]);
+
+  return 0;
+}
+

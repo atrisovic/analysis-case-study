@@ -1,7 +1,16 @@
-#include "RooFitHeaders.h"
-#include "iostream"
-#include "fstream"
-#include <math.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+#include <TAxis.h>
+#include <TFile.h>
+#include <TLine.h>
+#include <TCanvas.h>
+#include <TPad.h>
+#include <TLorentzVector.h>
+#include <TTree.h>
+
+#include "RooFitHeaders.hh"
 
 using namespace RooFit;
 using namespace TMath;
@@ -242,4 +251,12 @@ void ModelFixing()
   //RooStats::SPlot* sData_Dp = new RooStats::SPlot("sData_Dp","sData_Dp", *Data_Reduced, Model, RooArgList(*nSig_Dp,*nBkg) );
 
 } // Do something!
+
+
+int main( void )
+{
+  ModelFixing();
+
+  return 0;
+}
 

@@ -11,15 +11,15 @@
 
 void addBDT( const std::string& datadir )
 {
-  TString fname= datadir + "/D2PiMuMuOS.root";
-  TString dname="D2PimumuOSTuple";
-  TString tname="DecayTree";
+  TString fname = datadir + "/D2PiMuMuOS.root";
+  TString dname = "D2PimumuOSTuple";
+  TString tname = "DecayTree";
   // Info("addBDT", "Going to add BDT for file  %s \n and tree %s/%s ",
   //      fname.Data(), dname.Data(), tname.Data());
 
   //Load the file with the ntuple to update
 
-  TFile *f = TFile::Open(fname,"update");
+  TFile *f = TFile::Open( fname, "r" );
   f->cd(dname);
   TTree *t = (TTree*)f->Get(dname+"/"+tname);
 
@@ -81,7 +81,7 @@ void addBDT( const std::string& datadir )
   std::cout << "\nMethod used: " << method << std::endl;
   std::cout << "----------------------------------------------------" << std::endl;
 
-  TBranch * BDTBranch = t->Branch("BDT",&BDT,"BDT/F");
+  // TBranch * BDTBranch = t->Branch("BDT",&BDT,"BDT/F");
   
   TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
   reader->AddVariable("D_DIRA_OWNPV", &var0);
@@ -130,6 +130,24 @@ void addBDT( const std::string& datadir )
   reader->BookMVA( methodName, weightFile );
   Int_t nentries = (Int_t) t->GetEntries();
 
+  TFile out( "artifacts/D2PiMuMuOS.root", "recreate" );
+  TTree outtree( tname, dname + "/" + tname );
+
+  outtree.Branch( "D_DIRA_OWNPV"       , &D_dira_ownpv       , "D_DIRA_OWNPV/D"        );
+  outtree.Branch( "D_IPCHI2_OWNPV"     , &D_ipchi2_ownpv     , "D_IPCHI2_OWNPV/D"      );
+  outtree.Branch( "D_ENDVERTEX_CHI2"   , &D_endver_chi2      , "D_ENDVERTEX_CHI2/D"    );
+  outtree.Branch( "D_TAU"              , &d_tau              , "D_TAU/D"               );
+  outtree.Branch( "D_MM"               , &d_mm               , "D_MM/D"                );
+  outtree.Branch( "piplus_PT"          , &piplus_pt          , "piplus_PT/D"           );
+  outtree.Branch( "piplus_IPCHI2_OWNPV", &piplus_ipchi2_ownpv, "piplus_IPCHI2_OWNPV/D" );
+  outtree.Branch( "piplus_P"           , &piplus_p           , "piplus_P/D"            );
+  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
+  outtree.Branch( "muplus_P"           , &muplus_p           , "muplus_P/D"            );
+  outtree.Branch( "muplus_PIDmu"       , &muplus_pidmu       , "muplus_PIDmu/D"        );
+  outtree.Branch( "muminus_P"          , &muminus_p          , "muminus_P/D"           );
+  outtree.Branch( "muminus_PIDmu"      , &muminus_pidmu      , "muminus_PIDmu/D"       );
+  outtree.Branch( "BDT"                , &BDT                , "BDT/F"                 );
+
   for (Int_t i = 0; i < nentries; i++)
   {
     if (i%5000 == 0) std::cout << "--- ... Processing event: " << i << std::endl;
@@ -155,7 +173,8 @@ void addBDT( const std::string& datadir )
     spect1 = muplus_p;
 
     BDT = reader->EvaluateMVA(methodName);
-    BDTBranch->Fill();
+    outtree.Fill();
+    // BDTBranch->Fill();
   }
   /*
   Double_t d_mm;
@@ -168,8 +187,12 @@ void addBDT( const std::string& datadir )
   Double_t muminus_p;
   Double_t muminus_pidmu;
   */
-  t->Write("",TObject::kOverwrite);
+  // t->Write("",TObject::kOverwrite);
   f->Close();
+
+  outtree.Write();
+  out.Close();
+
   std::cout << std::endl << "-----------------------------------" << std::endl;
 }
 

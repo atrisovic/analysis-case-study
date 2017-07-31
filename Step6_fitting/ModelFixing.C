@@ -8,9 +8,7 @@ using namespace TMath;
 using namespace std;
 
 // Get the data
-//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
-//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
-TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
+TFile f1("../data/D2PiMuMuOS.root", "read");
 
 RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealVar* nSig_Ds, RooRealVar* nBkg) {
 

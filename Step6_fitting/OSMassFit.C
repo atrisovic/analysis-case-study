@@ -10,7 +10,7 @@ using namespace std;
 // Get the data
 //TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
 //TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
-TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
+TFile f1("../data/D2PiMuMuOS.root", "read");
 
 RooWorkspace* GetWorkspace(std::string file_location) {
 

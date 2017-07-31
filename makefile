@@ -19,10 +19,10 @@ artifacts:
 
 
 # Results of step 4 execution.
-TMVAClassification_BDTB.class.C: Step4_tmva/bin/TMVAClassification
+weights/TMVAClassification_BDTB.class.C: Step4_tmva/bin/TMVAClassification
 	@ bin/run trainmva
 
-artifacts/D2PiMuMuOS.root: TMVAClassification_BDTB.class.C | artifacts
+artifacts/D2PiMuMuOS.root: weights/TMVAClassification_BDTB.class.C | artifacts
 	@ bin/run addbdt
 
 2D_Optimisation_Pi.pdf: artifacts/D2PiMuMuOS.root

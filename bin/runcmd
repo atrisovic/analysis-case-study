@@ -104,34 +104,36 @@ def unfold( dic, original = None ):
 
 
 def parse( cmd ):
+    cmd = cmd.strip()
+
     if not isinstance( cmd, str ):
         return cmd
 
-    if not re.search( '(.*?)\((.*)\)', cmd ):
+    if not re.search( '(\w*?)\s*\((.*)\)', cmd ):
         return cmd
 
-    match = re.search( '(.*?)\((.*)\)', cmd.strip() )
+    match    = re.search( '(\w*?)\s*\((.*)\)', cmd )
     function = match.group( 1 )
     args     = match.group( 2 )
 
-    match = re.search( '(.*?)\((.*)\)', args )
+    match = re.search( '(\w*?)\s*\((.*)\)', args )
     if match:
-        args = re.sub( '(.*?)\((.*)\)', parse( match.group() ), args )
+        args = re.sub( '(\w*?)\s*\((.*)\)', parse( match.group() ), args )
 
     if ( function == 'existing' ):
         paths = [ arg.strip() for arg in args.split( ',' ) ]
         for path in paths:
             if os.path.exists( path ):
-                return path
+                return re.sub( '(\w*?)\s*\((.*)\)', path, cmd )
         raise BaseException( '\x1b[91mNone of the paths \x1b[1m%s\x1b[21m exists.\x1b[0m' % paths )
 
     if ( function == 'prependeos' ):
         path = args.split( ',' )[ 0 ].strip()
         pref = args.split( ',' )[ 1 ].strip()
         if path.startswith( '/eos' ):
-            return pref + path
+            return re.sub( '(\w*?)\s*\((.*)\)', pref + path, cmd )
         else:
-            return path
+            return re.sub( '(\w*?)\s*\((.*)\)', path       , cmd )
 
     return cmd
 

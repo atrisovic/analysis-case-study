@@ -3,7 +3,7 @@
 # Exit if any command returns a non-zero exit code
 set -e
 
-kinit -k -t user.keytab
+#kinit -k -t user.keytab
 
 # Train MVA
 ( cd ..; bin/run trainmva )

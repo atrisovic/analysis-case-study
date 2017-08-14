@@ -25,6 +25,14 @@ D- -> pi+ mu- mu-
 
 `LHCb Collision 12 Beam4000GeV-VeloClosed-MagDownRealData Reco14 Stripping21 90000000 CHARMMDST`
 
+# Instructions
+
+Compile: `make`
+
+Run all: `sh run_all.sh`
+
+Run one stage: `bin/run addbdt`
+
 # Location
 
 N-tuples are at:

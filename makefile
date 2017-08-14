@@ -5,14 +5,13 @@ all: 2D_Optimisation_Pi.pdf
 
 # Compilation rules for step 4 binaries.
 Step4_tmva/bin/TMVAClassification:
-	@ cd Step4_tmva; $(MAKE) $@
+	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
 
 Step4_tmva/bin/addBDT:
-	@ cd Step4_tmva; $(MAKE) $@
+	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
 
 Step4_tmva/bin/OSMassFit:
-	@ cd Step4_tmva; $(MAKE) $@
-
+	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
 
 artifacts:
 	@ mkdir -p $@
@@ -20,13 +19,13 @@ artifacts:
 
 # Results of step 4 execution.
 weights/TMVAClassification_BDTB.class.C: Step4_tmva/bin/TMVAClassification
-	@ bin/run trainmva
+	@ bin/run trainmva > trainmva.out 2> trainmva.err
 
 artifacts/D2PiMuMuOS.root: weights/TMVAClassification_BDTB.class.C | artifacts
-	@ bin/run addbdt
+	@ bin/run addbdt > addbdt.out 2> addbdt.err
 
 2D_Optimisation_Pi.pdf: artifacts/D2PiMuMuOS.root
-	@ bin/run optimisentp
+	@ bin/run optimisentp > optimisentp.out 2> optimisentp.err
 
 
 

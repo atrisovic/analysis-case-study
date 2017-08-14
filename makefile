@@ -5,13 +5,16 @@ all: 2D_Optimisation_Pi.pdf
 
 # Compilation rules for step 4 binaries.
 Step4_tmva/bin/TMVAClassification:
-	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
+	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
+	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
 
 Step4_tmva/bin/addBDT:
-	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
+	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
+	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
 
 Step4_tmva/bin/OSMassFit:
-	@ cd Step4_tmva; $(MAKE) $(@:Step4_tmva/%=%)
+	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
+	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
 
 artifacts:
 	@ mkdir -p $@

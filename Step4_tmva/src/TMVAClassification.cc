@@ -129,10 +129,10 @@ int TMVAClassification( const std::string& datadir, const std::string& mcdir, TS
    //
    // --- Boosted Decision Trees
    Use["BDT"]             = 1; // uses Adaptive Boost
-   Use["BDTG"]            = 1; // uses Gradient Boost
-   Use["BDTB"]            = 1; // uses Bagging
-   Use["BDTD"]            = 1; // decorrelation + Adaptive Boost
-   Use["BDTF"]            = 1; // allow usage of fisher discriminant for node splitting
+   Use["BDTG"]            = 0; // uses Gradient Boost
+   Use["BDTB"]            = 0; // uses Bagging
+   Use["BDTD"]            = 0; // decorrelation + Adaptive Boost
+   Use["BDTF"]            = 0; // allow usage of fisher discriminant for node splitting
    //
    // --- Friedman's RuleFit method, ie, an optimised series of cuts ("rules")
    Use["RuleFit"]         = 0;

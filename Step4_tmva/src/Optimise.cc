@@ -62,8 +62,8 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooDataSet* Data, RooAddPdf* 
 
     RooPlot* frame = D_MM->frame(1775,1925, 100) ;
     ReducedData->plotOn(frame);
-    Model->plotOn(frame, NormRange("fit_range"), Components("CombBG_PDF"), LineColor(3), LineStyle(2));
-    Model->plotOn(frame, NormRange("fit_range"), Components("signal_model"), LineColor(2), LineStyle(2));
+    Model->plotOn(frame, NormRange("fit_range"), Components("CombBG_PDF"), LineColor(4), LineStyle(2));
+    Model->plotOn(frame, NormRange("fit_range"), Components("signal_model"), LineColor(3), LineStyle(1));
     Model->plotOn(frame, NormRange("fit_range"));
 
     TCanvas c("c", "c", 800, 800);

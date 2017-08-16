@@ -78,9 +78,9 @@ void PlotMass( RooRealVar* D_MM, RooDataSet* Data, RooAddPdf* Model) {
     
   RooPlot* frame = D_MM->frame(1810,2040, 100) ;
   Data->plotOn(frame);
-  Model->plotOn(frame, NormRange("fit_range"), Components("CombBG_PDF"), LineColor(3), LineStyle(2));
-  Model->plotOn(frame, NormRange("fit_range"), Components("signal_model_Dp"), LineColor(2), LineStyle(2));
-  Model->plotOn(frame, NormRange("fit_range"), Components("signal_model_Ds"), LineColor(2), LineStyle(2));
+  Model->plotOn(frame, NormRange("fit_range"), Components("CombBG_PDF"), LineColor(4), LineStyle(2));
+  Model->plotOn(frame, NormRange("fit_range"), Components("signal_model_Dp"), LineColor(3), LineStyle(1));
+  Model->plotOn(frame, NormRange("fit_range"), Components("signal_model_Ds"), LineColor(2), LineStyle(1));
   Model->plotOn(frame, NormRange("fit_range"));
 
   

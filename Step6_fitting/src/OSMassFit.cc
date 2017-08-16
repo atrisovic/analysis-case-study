@@ -10,7 +10,7 @@
 #include <TLorentzVector.h>
 #include <TTree.h>
 
-#include "RooFitHeaders.hh"
+#include "../include/RooFitHeaders.hh"
 
 using namespace RooFit;
 using namespace TMath;
@@ -18,8 +18,8 @@ using namespace std;
 
 // Get the data
 //TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts/D2PiMuMuOS.root", "read");
-//TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
-TFile f1("../data/D2PiMuMuOS.root", "read");
+TFile f1("/eos/lhcb/user/a/atrisovi/analysis-case-study/Step5_finalSelection/D2PimumuOS_final.root", "read");
+//TFile f1("../data/D2PiMuMuOS.root", "read");
 
 RooWorkspace* GetWorkspace(std::string file_location) {
 
@@ -143,8 +143,8 @@ void OSMassFit()
   Double_t MassMax = 2050.0;
 
   // Get the tree
-  TTree* D2PimumuTree = (TTree*) f1.Get("D2PimumuOSTuple/DecayTree"); 
-  //TTree* D2PimumuTree = (TTree*) f1.Get("DecayTree"); 
+  //TTree* D2PimumuTree = (TTree*) f1.Get("D2PimumuOSTuple/DecayTree"); 
+  TTree* D2PimumuTree = (TTree*) f1.Get("DecayTree"); 
  
   // Disable all branches and only enable ones we need
   D2PimumuTree->SetBranchStatus("*",0);
@@ -207,14 +207,18 @@ void OSMassFit()
   RooRealVar *nSig_Dp = w->var("nSig_Dp");
   RooRealVar *nSig_Ds = w->var("nSig_Ds");
   RooRealVar *nBkg = w->var("nBkg");
-  RooRealVar *K_CombBG = w->var("K_{CombBG}");
+  //RooRealVar *K_CombBG = w->var("K_{CombBG}");
+  RooRealVar *c0 = w->var("c0");
+  RooRealVar *c1 = w->var("c1");
   
   // Fix signal model to fit on phi channel 
   RooArgSet* parameters = (RooArgSet*)Model->getParameters(All_Data);
   parameters->remove(*nBkg);
   parameters->remove(*nSig_Dp);
   parameters->remove(*nSig_Ds);
-  parameters->remove(*K_CombBG);
+  //parameters->remove(*K_CombBG);
+  parameters->remove(*c0);
+  parameters->remove(*c1);
 
   TIterator* iter = parameters->createIterator();
   for(int i=0; i<parameters->getSize(); i++){

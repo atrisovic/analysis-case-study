@@ -21,12 +21,12 @@ RLIBLIST = Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physic
 
 # Find the root version and rootsys directory.
 ROOTVER = $(shell sed '/^root[[:blank:]]*=/!d;s/^root[[:blank:]]*=[[:blank:]]*\([^[:blank:]\#]*\).*/\1/g' ../cfg/versions)
-ROOTSYS = $(shell lb-run root/$(ROOTVER) echo '$$ROOTSYS')
-GPP     = $(shell lb-run root/$(ROOTVER) which g++)
+ROOTSYS = $(shell which lb-run > /dev/null 2>&1 && lb-run root/$(ROOTVER) echo '$$ROOTSYS' || echo ''  )
+GPP     = $(shell which lb-run > /dev/null 2>&1 && lb-run root/$(ROOTVER) which g++        || which g++)
 
 # Find the root header and lib directories.
-ROOTHDR  = $(shell readlink -e "$(firstword $(wildcard $(ROOTSYS)/include/root $(ROOTSYS)/include))")
-ROOTLIB  = $(shell readlink -e "$(firstword $(wildcard $(ROOTSYS)/lib/root     $(ROOTSYS)/lib    ))")
+ROOTHDR  = $(shell test -n "$(ROOTSYS)" && readlink -e "$(firstword $(wildcard $(ROOTSYS)/include/root $(ROOTSYS)/include))" || root-config --incdir)
+ROOTLIB  = $(shell test -n "$(ROOTSYS)" && readlink -e "$(firstword $(wildcard $(ROOTSYS)/lib/root     $(ROOTSYS)/lib    ))" || root-config --libdir)
 
 # Unexistent files needed by root. I cannot believe root can even compile.
 PATCHES  = $(HDIR)/snprintf.h $(HDIR)/strlcpy.h

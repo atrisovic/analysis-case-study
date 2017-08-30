@@ -10,7 +10,7 @@
 #include <TLorentzVector.h>
 #include <TTree.h>
 
-#include "include/RooFitHeaders.hh"
+#include "RooFitHeaders.hh"
 
 using namespace RooFit;
 using namespace TMath;

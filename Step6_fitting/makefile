@@ -37,8 +37,8 @@ CXXL    = $(GPP) -std=c++1y
 HDRSTR = $(foreach dir,$(HDRDIRS),-I $(dir))
 LIBSTR = $(foreach dir,$(LIBDIRS),-L $(dir)) $(foreach lib,$(LIBLIST),-l$(lib))
 
-CFLAGS  = -g -O -Wall -fPIC $(HDRSTR) -I $(ROOTSYS)/include
-DFLAGS  = -I $(ROOTSYS)/include
+CFLAGS  = -g -O -Wall -fPIC $(HDRSTR) -I $(ROOTHDR)
+DFLAGS  = -I $(ROOTHDR)
 LFLAGS  = -g -O -Wall -fPIC $(LIBSTR)
 RFLAGS  = -L $(ROOTLIB) $(foreach lib,$(RLIBLIST),-l$(lib))
 

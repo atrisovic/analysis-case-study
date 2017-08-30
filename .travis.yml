@@ -4,8 +4,3 @@ services:
 before_install:
       - docker build -t ana .
       - docker run -it --rm ana /bin/bash -c "make binaries"
-language: c
-compiler:
-      - gcc
-script:
-      - make binaries

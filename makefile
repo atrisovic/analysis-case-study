@@ -3,6 +3,9 @@
 all: 2D_Optimisation_Pi.pdf
 
 
+binaries: Step4_tmva/bin/TMVAClassification Step4_tmva/bin/addBDT Step4_tmva/bin/Optimise Step6_fitting/bin/OSMassFit Step6_fitting/bin/ModelFixing
+
+
 # Compilation rules for step 4 binaries.
 Step4_tmva/bin/TMVAClassification:
 	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
@@ -12,7 +15,15 @@ Step4_tmva/bin/addBDT:
 	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
 	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
 
-Step4_tmva/bin/OSMassFit:
+Step4_tmva/bin/Optimise:
+	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
+	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
+
+Step6_fitting/bin/OSMassFit:
+	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
+	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
+
+Step6_fitting/bin/ModelFixing:
 	@ $(eval dir := $(shell echo $@ | sed 's/\/.*//g'))
 	@ cd $(dir); $(MAKE) $(@:$(dir)/%=%)
 

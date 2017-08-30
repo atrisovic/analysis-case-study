@@ -20,6 +20,6 @@ ENV PYTHONPATH      "$ROOTSYS/lib:$PYTHONPATH"
 ADD https://root.cern.ch/download/root_v6.06.02.Linux-centos7-x86_64-gcc4.8.tar.gz /var/tmp/root.tar.gz
 RUN tar xzf /var/tmp/root.tar.gz -C /opt && rm /var/tmp/root.tar.gz
 
-RUN git clone https://github.com/atrisovic/analysis-case-study.git
-WORKDIR analysis-case-study 
+#RUN git clone https://github.com/atrisovic/analysis-case-study.git
+#WORKDIR analysis-case-study 
 

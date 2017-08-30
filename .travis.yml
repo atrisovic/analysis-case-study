@@ -4,8 +4,10 @@ services:
   - docker
 
 before_install:
-  - docker build -t ana .
-  - docker run --rm ana make binaries
+  - docker pull atrisovic/analysis-docker
+  - docker run atrisovic/analysis-docker /bin/sh 
 
 script:
-  - date
+  - git clone https://github.com/atrisovic/analysis-case-study.git
+  - cd analysis-case-study
+  - make binaries 

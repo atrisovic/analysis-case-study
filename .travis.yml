@@ -5,6 +5,6 @@ services:
 
 before_install:
   - docker build -t ana .
-  - docker run make binaries
+  - docker run --rm ana make binaries
 
 script: null

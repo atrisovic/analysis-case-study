@@ -6,4 +6,5 @@ services:
 before_install:
   - docker pull atrisovic/analysis-docker
   - docker run -it atrisovic/analysis-docker /bin/bash -c "git clone https://github.com/atrisovic/analysis-case-study.git; cd analysis-case-study; make binaries"
-
+script:
+  - date

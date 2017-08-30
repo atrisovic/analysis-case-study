@@ -7,4 +7,5 @@ before_install:
   - docker build -t ana .
   - docker run --rm ana make binaries
 
-script: null
+script:
+  - date

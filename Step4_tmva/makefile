@@ -10,7 +10,7 @@ CLEANUP = $(ODIR) $(DDIR)
 HDRDIRS = $(HDIR)
 LIBDIRS = $(LDIR)
 
-BINLIST = TMVAClassification addBDT Optimise
+BINLIST = TMVAClassification addBDT Optimise OSMassFit
 OBJLIST = $(BINLIST) nobanner
 
 RLIBLIST = Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread RooFit RooFitCore Gui TMVA TMVAGui

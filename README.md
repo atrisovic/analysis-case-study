@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/atrisovic/analysis-case-study.svg?branch=master)](https://travis-ci.org/atrisovic/analysis-case-study)
+
 # Analysis case study
 
 Repository of code to reproduce a LHCb physics analysis on rare charm decays. 
@@ -5,10 +7,7 @@ Repository of code to reproduce a LHCb physics analysis on rare charm decays.
 # Decay modes
 
 ```
-D+ -> K+ mu+ mu-
-D- -> K+ mu- mu-
 D+ -> pi+ mu+ mu-
-D- -> pi+ mu- mu-
 ```
 
 # Data

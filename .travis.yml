@@ -1,6 +1,10 @@
 sudo: required
+
 services:
-      - docker
+  - docker
+
 before_install:
-      - docker build -t ana .
-      - docker run -it --rm ana /bin/bash -c "make binaries"
+  - docker pull atrisovic/analysis-docker
+  - docker run -it atrisovic/analysis-docker /bin/bash -c "git clone https://github.com/atrisovic/analysis-case-study.git; cd analysis-case-study; make binaries"
+script:
+  - date

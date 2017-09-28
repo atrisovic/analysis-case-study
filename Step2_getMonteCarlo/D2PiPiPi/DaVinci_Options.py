@@ -20,7 +20,7 @@ dtt.ToolList += [
     , "TupleToolTrackInfo"
     , "TupleToolTrigger"
     , "TupleToolAngles"
-#    , "TupleToolVtxIsoln"
+    , "TupleToolVtxIsoln"
     , "TupleToolTrackIsolation"
     , "TupleToolTrigger"
     , "TupleToolTISTOS"
@@ -79,19 +79,13 @@ from Configurables import DaVinci
 # Configure DaVinci
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'MCDPipipi12-Up.root'
+DaVinci().TupleFile = 'MC_D2PiMuMu12_MagUp_NTuples.root'
 DaVinci().PrintFreq = 1000
 DaVinci().DataType = '2012'
 DaVinci().Simulation = True
 # Only ask for luminosity information when not using simulated data
 DaVinci().Lumi = DaVinci().Simulation
 DaVinci().EvtMax = -1
-DaVinci().CondDBtag = 'Sim08-20130503-vc-md100'
-DaVinci().DDDBtag = 'Sim08-20130503'
+DaVinci().CondDBtag = 'Sim08-20130503-1-vc-mu100'
+DaVinci().DDDBtag = 'Sim08-20130503-1'
 
-#from GaudiConf import IOHelper
-
-# Use the local input data
-#IOHelper().inputFiles([
-#    './00024919_00000001_1.allstreams.dst'
-#], clear=True)

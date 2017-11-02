@@ -1,13 +1,22 @@
-[![Build Status](https://travis-ci.org/atrisovic/analysis-case-study.svg?branch=master)](https://travis-ci.org/atrisovic/analysis-case-study)
-
 # Analysis case study
 
-Repository of code to reproduce a LHCb physics analysis on rare charm decays. 
+Provide a case study that illustrates the main steps that LHCb analyses go through, with a focus on the requirements for an analysis preservation framework. Steps should include.
+
+1. Data (and MC) Trigger 
+2. Data (and MC) Reconstruction 
+3. Data (and MC) Stripping 
+4. User analysis processing (ntuple production). 
+5. User analysis (ntuple processing). 
+
+The analysis presented in this section will then be used as a working example in the following sections
 
 # Decay modes
 
 ```
+D+ -> K+ mu+ mu-
+D- -> K+ mu- mu-
 D+ -> pi+ mu+ mu-
+D- -> pi+ mu- mu-
 ```
 
 # Data
@@ -16,16 +25,16 @@ D+ -> pi+ mu+ mu-
 
 `LHCb Collision 12 Beam4000GeV-VeloClosed-MagDownRealData Reco14 Stripping21 90000000 CHARMMDST`
 
-# Instructions
+# Location
 
-Compile: `make`
+N-tuples are at:
 
-Run all: `sh run_all.sh`
+`/var/pcjm/r02/lhcb/trisovic/Analysis` 
 
-Run one stage: `bin/run addbdt`
+and
 
-# Documentation of the original analysis 
+`/afs/cern.ch/work/a/atrisovi/public/Analysis`
 
-`https://cds.cern.ch/record/1952173?ln=en`
+# ANA Note
 
 `https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf`

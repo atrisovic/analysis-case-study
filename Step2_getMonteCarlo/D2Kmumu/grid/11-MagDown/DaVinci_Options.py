@@ -3,13 +3,13 @@ from Configurables import DecayTreeTuple, LoKi__Hybrid__TupleTool, TupleToolDeca
 
 # Stream and stripping line we want to use
 stream = 'AllStreams'
-line = 'D2XMuMu_PiOSLine'
+line = 'D2XMuMu_KOSLine'
 
 # Create an ntuple to capture D*+ decays from the StrippingLine line
-dtt = DecayTreeTuple('D2PimumuOSTuple')
+dtt = DecayTreeTuple('D2KmumuOSTuple')
 dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
 
-dtt.Decay = '[D+ -> ^pi+ ^mu+ ^mu-]CC'
+dtt.Decay = '[D+ -> ^K+ ^mu+ ^mu-]CC'
 dtt.ToolList += [
     "TupleToolGeometry"
     , "TupleToolKinematic"
@@ -72,16 +72,16 @@ LoKi_Vars.Variables =  {
           }
 
 
-dtt.addBranches({"D" :  "[D+ -> pi+ mu+ mu-]CC"} )
+dtt.addBranches({"D" :  "[D+ -> K+ mu+ mu-]CC"} )
 
 from Configurables import DaVinci
 
 # Configure DaVinci
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'MCDPipipi12-Up.root'
+DaVinci().TupleFile = 'MCDKmumu11-Down.root'
 DaVinci().PrintFreq = 1000
-DaVinci().DataType = '2012'
+DaVinci().DataType = '2011'
 DaVinci().Simulation = True
 # Only ask for luminosity information when not using simulated data
 DaVinci().Lumi = DaVinci().Simulation

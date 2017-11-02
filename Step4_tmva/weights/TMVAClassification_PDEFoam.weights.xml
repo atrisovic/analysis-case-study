@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<MethodSetup Method="PDEFoam::PDEFoam">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.04/02 [394242]"/>
+    <Info name="Creator" value="atrisovi"/>
+    <Info name="Date" value="Mon Sep  7 14:51:23 2015"/>
+    <Info name="Host" value="Linux lcgapp-slc6-physical1.cern.ch 2.6.32-504.23.4.el6.x86_64 #1 SMP Wed Jun 10 07:47:59 CEST 2015 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/work/a/atrisovi/public"/>
+    <Info name="Training events" value="2000"/>
+    <Info name="TrainingTime" value="1.02434087e+00"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="No">None</Option>
+    <Option name="H" modified="Yes">False</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="SigBgSeparate" modified="Yes">False</Option>
+    <Option name="TailCut" modified="Yes">1.000000e-03</Option>
+    <Option name="VolFrac" modified="Yes">6.660000e-02</Option>
+    <Option name="nActiveCells" modified="Yes">500</Option>
+    <Option name="nSampl" modified="Yes">2000</Option>
+    <Option name="nBin" modified="Yes">5</Option>
+    <Option name="Compress" modified="Yes">True</Option>
+    <Option name="MultiTargetRegression" modified="No">False</Option>
+    <Option name="Nmin" modified="Yes">100</Option>
+    <Option name="MaxDepth" modified="No">0</Option>
+    <Option name="FillFoamWithOrigWeights" modified="No">False</Option>
+    <Option name="UseYesNoCell" modified="No">False</Option>
+    <Option name="DTLogic" modified="No">None</Option>
+    <Option name="Kernel" modified="Yes">None</Option>
+    <Option name="TargetSelection" modified="No">Mean</Option>
+  </Options>
+  <Variables NVar="4">
+    <Variable VarIndex="0" Expression="D_PT" Label="D_PT" Title="D_PT" Unit="" Internal="D_PT" Type="F" Min="1.02641914e+02" Max="2.28623496e+04"/>
+    <Variable VarIndex="1" Expression="D_MM" Label="D_MM" Title="Expression 2" Unit="" Internal="D_MM" Type="F" Min="1.76199402e+03" Max="2.06963892e+03"/>
+    <Variable VarIndex="2" Expression="muplus_PT" Label="muplus_PT" Title="Variable 3" Unit="units" Internal="muplus_PT" Type="F" Min="4.00772247e+02" Max="1.53631699e+04"/>
+    <Variable VarIndex="3" Expression="muminus_PT" Label="muminus_PT" Title="Variable 4" Unit="units" Internal="muminus_PT" Type="F" Min="4.00264954e+02" Max="1.00398164e+04"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="0"/>
+  <MVAPdfs/>
+  <Weights SigBgSeparated="0" Frac="1.0000000474974513e-03" DiscrErrCut="-1.0000000000000000e+00" VolFrac="6.6600002348423004e-02" nCells="999" nSampl="2000" nBin="5" EvPerBin="10000" Compress="1" DoRegression="0" CutNmin="1" Nmin="100" CutRMSmin="0" RMSmin="0.0000000000000000e+00" Kernel="0" TargetSelection="0" FillFoamWithOrigWeights="0" UseYesNoCell="0">
+    <Xmin Index="0" Value="1.1857370758056641e+02"/>
+    <Xmin Index="1" Value="1.7672855224609375e+03"/>
+    <Xmin Index="2" Value="4.0077224731445312e+02"/>
+    <Xmin Index="3" Value="4.0122891235351562e+02"/>
+    <Xmax Index="0" Value="1.9040994140625000e+04"/>
+    <Xmax Index="1" Value="2.0666547851562500e+03"/>
+    <Xmax Index="2" Value="1.1294893554687500e+04"/>
+    <Xmax Index="3" Value="9.8605205078125000e+03"/>
+  </Weights>
+</MethodSetup>

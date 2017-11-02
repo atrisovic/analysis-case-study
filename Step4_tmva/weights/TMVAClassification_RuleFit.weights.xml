@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<MethodSetup Method="RuleFit::RuleFit">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.04/02 [394242]"/>
+    <Info name="Creator" value="atrisovi"/>
+    <Info name="Date" value="Mon Sep  7 14:52:45 2015"/>
+    <Info name="Host" value="Linux lcgapp-slc6-physical1.cern.ch 2.6.32-504.23.4.el6.x86_64 #1 SMP Wed Jun 10 07:47:59 CEST 2015 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/work/a/atrisovi/public"/>
+    <Info name="Training events" value="2000"/>
+    <Info name="TrainingTime" value="8.37680316e+00"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="No">None</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="GDTau" modified="Yes">-1.000000e+00</Option>
+    <Option name="GDTauPrec" modified="Yes">1.000000e-02</Option>
+    <Option name="GDStep" modified="Yes">1.000000e-02</Option>
+    <Option name="GDNSteps" modified="Yes">10000</Option>
+    <Option name="GDErrScale" modified="Yes">1.020000e+00</Option>
+    <Option name="LinQuantile" modified="No">2.500000e-02</Option>
+    <Option name="GDPathEveFrac" modified="No">5.000000e-01</Option>
+    <Option name="GDValidEveFrac" modified="No">5.000000e-01</Option>
+    <Option name="fEventsMin" modified="Yes">1.000000e-02</Option>
+    <Option name="fEventsMax" modified="Yes">5.000000e-01</Option>
+    <Option name="nTrees" modified="Yes">20</Option>
+    <Option name="ForestType" modified="No">adaboost</Option>
+    <Option name="RuleMinDist" modified="Yes">1.000000e-03</Option>
+    <Option name="MinImp" modified="Yes">1.000000e-03</Option>
+    <Option name="Model" modified="Yes">modrulelinear</Option>
+    <Option name="RuleFitModule" modified="Yes">rftmva</Option>
+    <Option name="RFWorkDir" modified="No">./rulefit</Option>
+    <Option name="RFNrules" modified="No">2000</Option>
+    <Option name="RFNendnodes" modified="No">4</Option>
+  </Options>
+  <Variables NVar="4">
+    <Variable VarIndex="0" Expression="D_PT" Label="D_PT" Title="D_PT" Unit="" Internal="D_PT" Type="F" Min="1.02641914e+02" Max="2.28623496e+04"/>
+    <Variable VarIndex="1" Expression="D_MM" Label="D_MM" Title="Expression 2" Unit="" Internal="D_MM" Type="F" Min="1.76199402e+03" Max="2.06963892e+03"/>
+    <Variable VarIndex="2" Expression="muplus_PT" Label="muplus_PT" Title="Variable 3" Unit="units" Internal="muplus_PT" Type="F" Min="4.00772247e+02" Max="1.53631699e+04"/>
+    <Variable VarIndex="3" Expression="muminus_PT" Label="muminus_PT" Title="Variable 4" Unit="units" Internal="muminus_PT" Type="F" Min="4.00264954e+02" Max="1.00398164e+04"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="0"/>
+  <MVAPdfs/>
+  <Weights NRules="0" NLinear="4" LearningModel="0" ImportanceCut="1.0000000000000000e-03" LinQuantile="2.5000000000000001e-02" AverageSupport="1.7568354430379746e-01" AverageRuleSigma="3.8055070170038197e-01" Offset="6.2332014000000121e-03">
+    <Linear OK="1" Coeff="-4.5178844705322323e+00" Norm="1.8818655034427109e-04" DM="5.4358044433593750e+02" DP="9.7588623046875000e+03" Importance="1.7192841054622996e+00"/>
+    <Linear OK="1" Coeff="-2.2322480852539095e+00" Norm="2.6149009761260597e-02" DM="1.8232320556640625e+03" DP="1.9178229980468750e+03" Importance="8.4948357521270934e-01"/>
+    <Linear OK="1" Coeff="-1.6671697450439475e+00" Norm="4.6042875775848441e-04" DM="4.2886523437500000e+02" DP="4.0795290527343750e+03" Importance="6.3444261633012111e-01"/>
+    <Linear OK="1" Coeff="-1.6928566270263694e+00" Norm="4.2836105818386911e-04" DM="4.2658740234375000e+02" DP="4.3947753906250000e+03" Importance="6.4421777729302665e-01"/>
+  </Weights>
+</MethodSetup>

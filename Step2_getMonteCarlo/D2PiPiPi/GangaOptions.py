@@ -17,13 +17,12 @@ myApplication.platform           = "x86_64-slc6-gcc48-opt"
 
 filename2 = "MC201221263022Beam4000GeV-2012-MagUp-Nu25-Pythia8Sim08aDigi13Trig0x409f0045Reco14aStripping20FilteredD2HHHHLTSTRIPDST.py"
 j2 = Job(application = myApplication)
-j2.name = "MCUp12PPP"
+j2.name = "MC-Up-12-MS"
 j2.application.optsfile = [ File ('DaVinci_Options.py')]
 j2.inputdata = j2.application.readInputData(filename2)
-j2.splitter =  SplitByFiles ( filesPerJob = 2, maxFiles = -1 ) 
+j2.splitter =  SplitByFiles ( filesPerJob = 30, maxFiles = -1 ) 
 j2.merger = None 
-j2.outputfiles = [LocalFile("MC_D2PiMuMu12_MagUp_NTuples.root")]  
+j2.outputfiles = ["MCDPipipi12-Up.root"] 
 j2.backend    = Dirac() 
 j2.backend.settings['CPUTime'] = 172800 
 j2.submit()
-

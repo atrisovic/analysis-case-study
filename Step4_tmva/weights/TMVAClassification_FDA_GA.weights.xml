@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<MethodSetup Method="FDA::FDA_GA">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.2.1 [262657]"/>
+    <Info name="ROOT Release" value="6.04/02 [394242]"/>
+    <Info name="Creator" value="atrisovi"/>
+    <Info name="Date" value="Mon Sep  7 14:51:36 2015"/>
+    <Info name="Host" value="Linux lcgapp-slc6-physical1.cern.ch 2.6.32-504.23.4.el6.x86_64 #1 SMP Wed Jun 10 07:47:59 CEST 2015 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/work/a/atrisovi/public"/>
+    <Info name="Training events" value="2000"/>
+    <Info name="TrainingTime" value="1.07659259e+01"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="No">None</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="No">False</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="Formula" modified="Yes">(0)+(1)*x0+(2)*x1+(3)*x2+(4)*x3</Option>
+    <Option name="ParRanges" modified="Yes">(-1,1);(-10,10);(-10,10);(-10,10);(-10,10)</Option>
+    <Option name="FitMethod" modified="Yes">GA</Option>
+    <Option name="Converger" modified="No">None</Option>
+  </Options>
+  <Variables NVar="4">
+    <Variable VarIndex="0" Expression="D_PT" Label="D_PT" Title="D_PT" Unit="" Internal="D_PT" Type="F" Min="1.02641914e+02" Max="2.28623496e+04"/>
+    <Variable VarIndex="1" Expression="D_MM" Label="D_MM" Title="Expression 2" Unit="" Internal="D_MM" Type="F" Min="1.76199402e+03" Max="2.06963892e+03"/>
+    <Variable VarIndex="2" Expression="muplus_PT" Label="muplus_PT" Title="Variable 3" Unit="units" Internal="muplus_PT" Type="F" Min="4.00772247e+02" Max="1.53631699e+04"/>
+    <Variable VarIndex="3" Expression="muminus_PT" Label="muminus_PT" Title="Variable 4" Unit="units" Internal="muminus_PT" Type="F" Min="4.00264954e+02" Max="1.00398164e+04"/>
+  </Variables>
+  <Spectators NSpec="0"/>
+  <Classes NClass="2">
+    <Class Name="Signal" Index="0"/>
+    <Class Name="Background" Index="1"/>
+  </Classes>
+  <Transformations NTransformations="0"/>
+  <MVAPdfs/>
+  <Weights NPars="5" NDim="1" Formula="(0)+(1)*x0+(2)*x1+(3)*x2+(4)*x3">
+    <Parameter Index="0" Value="5.0098557600319793e-01"/>
+    <Parameter Index="1" Value="0.0000000000000000e+00"/>
+    <Parameter Index="2" Value="0.0000000000000000e+00"/>
+    <Parameter Index="3" Value="0.0000000000000000e+00"/>
+    <Parameter Index="4" Value="0.0000000000000000e+00"/>
+  </Weights>
+</MethodSetup>

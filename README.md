@@ -1,22 +1,11 @@
 # Analysis case study
 
-Provide a case study that illustrates the main steps that LHCb analyses go through, with a focus on the requirements for an analysis preservation framework. Steps should include.
-
-1. Data (and MC) Trigger 
-2. Data (and MC) Reconstruction 
-3. Data (and MC) Stripping 
-4. User analysis processing (ntuple production). 
-5. User analysis (ntuple processing). 
-
-The analysis presented in this section will then be used as a working example in the following sections
+This is an analysis case study that illustrates the main steps of LHCb physics analyses.
 
 # Decay modes
 
 ```
-D+ -> K+ mu+ mu-
-D- -> K+ mu- mu-
 D+ -> pi+ mu+ mu-
-D- -> pi+ mu- mu-
 ```
 
 # Data
@@ -25,15 +14,13 @@ D- -> pi+ mu- mu-
 
 `LHCb Collision 12 Beam4000GeV-VeloClosed-MagDownRealData Reco14 Stripping21 90000000 CHARMMDST`
 
+# Environment
+
+`source  /cvmfs/lhcb.cern.ch/lib/LbLogin.sh`
+
 # Location
 
-N-tuples are at:
-
-`/var/pcjm/r02/lhcb/trisovic/Analysis` 
-
-and
-
-`/afs/cern.ch/work/a/atrisovi/public/Analysis`
+`data` and `monte_carlo`
 
 # ANA Note
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DATALOC="\"root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis-case-study/Step3_cuts\""
-MCLOC="\"root://eoslhcb.cern.ch//eos/lhcb/user/a/atrisovi/analysis/Analysis/Step3_MC\""
+DATALOC=""
+MCLOC=""
 
 # Exit if any command returns a non-zero exit code
 set -e

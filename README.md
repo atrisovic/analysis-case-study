@@ -22,7 +22,7 @@ Bookkeeping paths:
 
 # Environment
 
-To reproduce this case study, start off my setting up the computing environment from CVMFS with: 
+To reproduce this case study, start off by setting up the computing environment from CVMFS with: 
 `source  /cvmfs/lhcb.cern.ch/lib/LbLogin.sh`
 The LHCb software (ROOT is included) will be necessary for each step of the analysis.
 

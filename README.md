@@ -20,9 +20,13 @@ Bookkeeping paths:
 - `LHCb Collision 11 Beam3500GeV-VeloClosed-MagDownRealData Reco14 Stripping21r1 90000000 CHARMMDST`
 - `LHCb Collision 12 Beam4000GeV-VeloClosed-MagDownRealData Reco14 Stripping21 90000000 CHARMMDST`
 
-# Environment
+# Requirements
 
-To reproduce this case study, start off by setting up the computing environment from CVMFS with: 
+To reproduce this case study, you will need:
+- CERN Virtual Machine File System (CVMFS)
+- XQuartz (for MacOS)
+
+Start off by setting up the computing environment from CVMFS with: 
 `source  /cvmfs/lhcb.cern.ch/lib/LbLogin.sh`
 The LHCb software (ROOT is included) will be necessary for each step of the analysis.
 

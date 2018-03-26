@@ -1,6 +1,6 @@
 # Analysis case study
 
-In this case study, we attempt to reproduce results from a physics analysis described [here.](https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf) The goal is to evaluate how successful we can reproduce the analysis and to identify the challenges while doing so.
+In this case study, we attempt to reproduce results from a physics analysis described [here.](https://cds.cern.ch/record/1543929) The goal is to evaluate how successful we can reproduce the analysis and to identify the challenges while doing so.
 
 # Description
 
@@ -10,7 +10,7 @@ This study was done on decays of:
 
 These decays are very rare, which makes their observation extremely challenging. The LHC produces a lot of charm particles (_D_), but it also produces a much greater number of other particles which can be mistaken for the signal. It is necessary to develop an effective strategy to identify the signal events in the large data sample. The event selection strategy is implemented in three stages: the trigger selection, stripping selection and the multivariate analysis.
 
-In the [analysis note](https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf), you can lean more about the theoretical background and motivation to study this decay.
+In the [analysis note](https://cds.cern.ch/record/1543929), you can lean more about the theoretical background and motivation to study this decay.
 
 # Data selection
 
@@ -28,7 +28,7 @@ The LHCb software (ROOT is included) will be necessary for each step of the anal
 
 # Location
 
-Datasets should be located in the folders: `data` and `monte_carlo`. The data may be available on request.
+For the scripts to work out of the box, create folders `data` and `monte_carlo` where the datasets should be located. Currently the data may only be available to the CERN affiliates.
 
 # Contributors 
 

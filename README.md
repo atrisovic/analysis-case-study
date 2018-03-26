@@ -1,6 +1,6 @@
 # Analysis case study
 
-In this case study, we attempt to reproduce results from a physics analysis described [here.](https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf)
+In this case study, we attempt to reproduce results from a physics analysis described [here.](https://cds.cern.ch/record/1421263/files/LHCb-ANA-2012-025.pdf) The goal is to evaluate how successful we can reproduce the analysis and to identify the challenges while doing so.
 
 # Description
 

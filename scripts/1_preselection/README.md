@@ -39,3 +39,16 @@ hadd -f D2PiMuMuOS.root D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root D2hMuMu12_M
 ```
 
 Finally, one output file representing real data should be: `D2PiMuMuOS.root`
+
+# Troubleshooting
+To solve the following error:
+```
+libGL error: No matching fbConfigs or visuals found
+libGL error: failed to load driver: swrast
+Error in <RootX11ErrorHandler>: GLXBadContext (XID: 10486013, XREQ: 149)
+```
+Source new ROOT version by (Only accessible to CERN affiliates):
+```
+source /afs/cern.ch/sw/lcg/external/gcc/4.9/x86_64-slc6-gcc49-opt/setup.sh
+source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc49-opt/root/bin/thisroot.sh
+```

@@ -14,6 +14,7 @@ There are four input ntuples, each of which describes different detector conditi
 
 # Instructions
 
+## Step 1. Initial cuts
 To run scripts start ROOT by typing: `root`
 
 Then:
@@ -24,7 +25,7 @@ root [1] Main("../../data/Stripping21r1_D2HMuMu11_MagDown_NTuples.root", "D2Pimu
 ```
 The same process needs to be done on the other ntuples using the other three scripts.
 
-## Merging
+## Step 2. Merging
 
 The list of output files are:
 - `D2hMuMu11_MagU_2PiMuMuOS_NTuple_Reduced.root`
@@ -32,7 +33,7 @@ The list of output files are:
 - `D2hMuMu11_MagD_2PiMuMuOS_NTuple_Reduced.root`
 - `D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root`
 
-The simplify the further steps, we can merge these ntuples into one by running the command:
+To simplify the further steps, we can merge these ntuples into one by running the command:
 
 ```
 hadd -f D2PiMuMuOS.root D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root D2hMuMu11_MagD_2PiMuMuOS_NTuple_Reduced.root D2hMuMu11_MagU_2PiMuMuOS_NTuple_Reduced.root

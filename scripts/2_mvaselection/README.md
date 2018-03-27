@@ -1,14 +1,16 @@
-# TMVA step
+# Multivariate analysis
 
-Select the signal from the MC
+In this study, we use multivariate analysis to distinguish signal events from the background in real data sample. The classifier learns from the Monte Carlo (training) sample, and applies this experience to classify unseen inputs of real data based on their similarity to the training sample.
 
-`TCut mycuts = "D_MM>1840 && D_MM<1900";`
+The signal is defined by the cut in the signal region on Monte Carlo: `TCut mycuts = "D_MM>1840 && D_MM<1900";`
 
-Select the background from the data
+The background is defined from the data ouside the signal region: `TCut mycutb = "D_MM>2010";`
 
-`TCut mycutb = "D_MM>2010";`
+# Instructions
 
-## Training the BDT
+## 1. Training the Boosted Decision Tree (BDT)
+
+Decision trees (DT) are one of the machine learning algorithms that is commonly used in selection of event candidates. In this step we are training the classifier.
 
 ```
 LbLogin -c x86_64-slc6-gcc48-opt
@@ -16,14 +18,16 @@ SetupProject DaVinci v41r4
 root TMVAClassification.C
 ```
 
-## Results of the training
+## 2. Evaluation of the training results (by eye)
+
+These commands open the TMVA GUI.
 
 ```
 root
 TMVA::TMVAGui("TMVA_D2PiMuMu12_MagDown_withLogVars.root")
 ```
 
-## Add BDT response to the ntuples 
+## 3. Adding the BDT response to the ntuple
 
 Use the variables from the training found in TMVAClassification_BDT.weights.xml in `addBDT.C`
 

@@ -10,11 +10,11 @@ This study was done on decays of:
 
 These decays are very rare, which makes their observation extremely challenging. The LHC produces a lot of charm particles (_D_), but it also produces a much greater number of other particles which can be mistaken for the signal. It is necessary to develop an effective strategy to identify the signal events in the large data sample. The event selection strategy is implemented in three stages: the trigger selection, stripping selection and the multivariate analysis.
 
-In the [analysis note](https://cds.cern.ch/record/1543929), you can lean more about the theoretical background and motivation to study this decay.
+In the [paper](https://cds.cern.ch/record/1543929), you can lean more about the theoretical background and motivation to study this decay.
 
 # Data selection
 
-We use the full *Run 1* dataset collected in proton-proton collisions. The data was collected in 2011 and 2012 at the centre-of-mass energy of 7 TeV and 8 TeV respectively.
+The original study used the data collected in only 2011, however we use the full *Run 1* dataset from both 2011 and 2012. The data was collected in proton-proton collisions at the centre-of-mass energy of 7 TeV and 8 TeV respectively.
 
 Bookkeeping paths:
 - `LHCb Collision 11 Beam3500GeV-VeloClosed-MagDownRealData Reco14 Stripping21r1 90000000 CHARMMDST`

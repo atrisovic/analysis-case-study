@@ -28,10 +28,10 @@ The same process needs to be done on the other ntuples using the other three scr
 ## Step 2. Merging
 
 The list of output files are:
-- `D2hMuMu11_MagU_2PiMuMuOS_NTuple_Reduced.root` size: 983969238
-- `D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root` size: 4075115368
-- `D2hMuMu11_MagD_2PiMuMuOS_NTuple_Reduced.root` size: 9100702596
-- `D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root` size: 4050787431
+- `D2hMuMu11_MagU_2PiMuMuOS_NTuple_Reduced.root` size: 984 MB
+- `D2hMuMu12_MagU_2PiMuMuOS_NTuple_Reduced.root` size: 4076 MB
+- `D2hMuMu11_MagD_2PiMuMuOS_NTuple_Reduced.root` size: 982 MB
+- `D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root` size: 4051 MB
 
 To simplify the further steps, we can merge these ntuples into one by running the command:
 
@@ -42,15 +42,17 @@ hadd -f D2PiMuMuOS.root D2hMuMu12_MagD_2PiMuMuOS_NTuple_Reduced.root D2hMuMu12_M
 Finally, one output file representing real data should be: `D2PiMuMuOS.root`
 
 # Troubleshooting
+
 To solve the following error:
 ```
 libGL error: No matching fbConfigs or visuals found
 libGL error: failed to load driver: swrast
 Error in <RootX11ErrorHandler>: GLXBadContext (XID: 10486013, XREQ: 149)
 ```
-Source new ROOT version by (Only accessible to CERN affiliates):
+Source ROOT 6 with the following commands (only accessible to CERN affiliates):
 ```
 source /afs/cern.ch/sw/lcg/external/gcc/4.9/x86_64-slc6-gcc49-opt/setup.sh
 source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc49-opt/root/bin/thisroot.sh
 ```
-Note that the final output file size is approximately 18G, account limits on file size could cause unsuccessful merge. 
+
+Note that the final output file size is approximately 12 GB, account limits on file size could cause unsuccessful merge. 

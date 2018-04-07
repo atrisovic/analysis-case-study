@@ -36,4 +36,4 @@ For the scripts to work out of the box, create folders `data` and `monte_carlo` 
 
 # Contributors 
 
-Ana Trisovic, Alison Tully, Jordi Garra Tico
+Ana Trisovic, Alison Tully, Jordi Garra Tico, Xiaoli Chen

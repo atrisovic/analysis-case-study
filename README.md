@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/68934736.svg)](https://zenodo.org/badge/latestdoi/68934736)
+
 # Analysis case study
 
 In this case study, we attempt to reproduce results from a physics analysis described [here.](https://cds.cern.ch/record/1543929) The goal is to evaluate how successful we can reproduce the analysis and to identify the challenges while doing so.

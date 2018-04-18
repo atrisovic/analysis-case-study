@@ -13,6 +13,7 @@ The background is defined from the data ouside the signal region: `TCut mycutb =
 Decision trees (DT) are one of the machine learning algorithms that is commonly used in selection of event candidates. In this step we are training the classifier.
 
 ```
+source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh
 LbLogin -c x86_64-slc6-gcc48-opt
 SetupProject DaVinci v41r4
 root TMVAClassification.C

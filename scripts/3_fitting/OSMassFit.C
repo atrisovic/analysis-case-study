@@ -46,10 +46,11 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
   RooPlot* frame_pulls = D_MM->frame(1810,2040, 100) ;
   frame_pulls->addPlotable(hpull,"P");
   frame_pulls->SetTitle("");
-  frame_pulls->GetYaxis()->SetTitle("Pulls");
-  frame_pulls->GetYaxis()->SetTitleOffset(0.3);
-  frame_pulls->GetYaxis()->SetTitleSize(0.14);
-  frame_pulls->GetYaxis()->SetLabelSize(0.1);
+  //frame_pulls->GetYaxis()->SetTitle("Pulls");
+  //frame_pulls->GetYaxis()->SetTitleOffset(0.3);
+  //frame_pulls->GetYaxis()->SetTitleSize(0.14);
+  frame_pulls->GetYaxis()->SetLabelSize(0);
+  frame_pulls->GetYaxis()->SetNdivisions(503);
   frame_pulls->GetYaxis()->SetRangeUser(-5,5);
   frame_pulls->GetXaxis()->SetTitle("");
   frame_pulls->GetXaxis()->SetLabelSize(0);
@@ -67,6 +68,8 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
   c.Divide(1,2);
   TPad* p1=(TPad*)c.cd(1); p1->SetPad(0., 0.21, 1., 1.);
   frame->Draw();
+  
+  frame->SetTitle("Invariant mass of the two muons");
   TPad* p2=(TPad*)c.cd(2); p2->SetPad(0., 0., 1., 0.2);
   frame_pulls->Draw(); line1.Draw(); line2.Draw();
   c.SaveAs(TString("mass_fits/"+qsq_bin_label+".pdf"));
@@ -113,7 +116,6 @@ void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
     // Plot m(mumu)
     RooPlot* frame = MuMuMass->frame(250,2000,100);
     Data->plotOn(frame);
-    
     frame->SetXTitle("m(#mu#mu) [MeV/c^2]");
     frame->SetTitleOffset(1.2, "Y");
 

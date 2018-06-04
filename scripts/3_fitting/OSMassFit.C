@@ -36,11 +36,10 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
     
   RooPlot* frame = D_MM->frame(1810,2040, 100) ;
   Data->plotOn(frame);
-  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("CombBG_PDF"), LineColor(3), LineStyle(2));
-  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Dp"), LineColor(2), LineStyle(2));
-  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Ds"), LineColor(2), LineStyle(2));
+  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("CombBG_PDF"), LineColor(4), LineStyle(2));
+  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Dp"), LineColor(3), LineStyle(1));
+  Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Ds"), LineColor(3), LineStyle(1));
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"));
-
   
   RooHist* hpull = frame->pullHist();
   RooPlot* frame_pulls = D_MM->frame(1810,2040, 100) ;

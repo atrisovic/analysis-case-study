@@ -40,11 +40,14 @@ RooAddPdf* CreateModel(RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealVar* nSig_D
   RooCBShape *cb2_Ds = new RooCBShape("cb2_Ds", "D^{+} cb2", *D_MM, *mean_Ds, *sigma2_Ds, *a2_Ds, *n_Ds);
 
   RooAddPdf *signal_model_Ds = new RooAddPdf("signal_model_Ds", "D^+_s sum of CBs", *cb1_Ds, *cb2_Ds, *cbf_Ds);
-  
+ 
+ RooRealVar* c0 = new RooRealVar("c0","c0", -2.98339e-01, -1.0, 1.0);
+ RooRealVar* c1 = new RooRealVar("c1","c1", 2.18777e-02, -0.1, 0.1);
+ RooChebychev* CombBG_PDF = new RooChebychev("CombBG_PDF","CombBG_PDF",*D_MM,RooArgSet(*c0,*c1)); 
   
   // Exponential background model
-  RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.001, -1, 1, "c^{2}/MeV");
-  RooExponential *CombBG_PDF = new RooExponential("CombBG_PDF", "CombBG_PDF", *D_MM, *K_CombBG);
+  // RooRealVar *K_CombBG = new RooRealVar("K_{CombBG}", "K_{CombBG}", -0.001, -1, 1, "c^{2}/MeV");
+  // RooExponential *CombBG_PDF = new RooExponential("CombBG_PDF", "CombBG_PDF", *D_MM, *K_CombBG);
 
   return new RooAddPdf("Model", "Model", RooArgList(*signal_model_Dp, *signal_model_Ds, *CombBG_PDF), RooArgList(*nSig_Dp, *nSig_Ds, *nBkg));
 }

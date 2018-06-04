@@ -9,7 +9,6 @@ using namespace std;
 
 // Get the data
 TFile f1("../1_preselection/D2PiMuMuOS.root", "read");
-
 RooWorkspace* GetWorkspace(std::string file_location) {
 
   TFile *tf = new TFile("PhiModels.root");
@@ -36,11 +35,12 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
     
   RooPlot* frame = D_MM->frame(1810,2040, 100) ;
   Data->plotOn(frame);
+
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("CombBG_PDF"), LineColor(4), LineStyle(2));
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Dp"), LineColor(3), LineStyle(1));
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("signal_model_Ds"), LineColor(3), LineStyle(1));
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"));
-  
+
   RooHist* hpull = frame->pullHist();
   RooPlot* frame_pulls = D_MM->frame(1810,2040, 100) ;
   frame_pulls->addPlotable(hpull,"P");
@@ -155,15 +155,15 @@ void OSMassFit()
 
   // Create the dataset variables
   RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
-  RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.1, 0.25);
+  RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.15, 0.25);
   RooRealVar* muplus_PX = new RooRealVar("muplus_PX", "muplus_PX", -1e9, 1e9);
   RooRealVar* muplus_PY = new RooRealVar("muplus_PY", "muplus_PY", -1e9, 1e9);
   RooRealVar* muplus_PZ = new RooRealVar("muplus_PZ", "muplus_PZ", -1e9, 1e9);
   RooRealVar* muminus_PX = new RooRealVar("muminus_PX", "muminus_PX", -1e9, 1e9);
   RooRealVar* muminus_PY = new RooRealVar("muminus_PY", "muminus_PY", -1e9, 1e9);
   RooRealVar* muminus_PZ = new RooRealVar("muminus_PZ", "muminus_PZ", -1e9, 1e9);
-  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 2., 1e9);
-  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 2., 1e9);
+  RooRealVar* muplus_PIDmu = new RooRealVar("muplus_PIDmu", "muplus_PIDmu", 1.8, 1e9);
+  RooRealVar* muminus_PIDmu = new RooRealVar("muminus_PIDmu", "muminus_PIDmu", 1.8, 1e9);
   RooRealVar* piplus_PIDK = new RooRealVar("piplus_PIDK", "piplus_PIDK", -1e9, 0.);
   RooRealVar* piplus_PIDmu = new RooRealVar("piplus_PIDmu", "piplus_PIDmu", -1e9, 0.);
   RooRealVar* muplus_isMuon = new RooRealVar("muplus_isMuon", "muplus_isMuon", 0.9, 1.1);
@@ -200,13 +200,14 @@ void OSMassFit()
   //RooRealVar *K_CombBG = w->var("K_{CombBG}");
   RooRealVar *c0 = w->var("c0");
   RooRealVar *c1 = w->var("c1");
-  
+
   // Fix signal model to fit on phi channel 
   RooArgSet* parameters = (RooArgSet*)Model->getParameters(All_Data);
   parameters->remove(*nBkg);
   parameters->remove(*nSig_Dp);
   parameters->remove(*nSig_Ds);
   // parameters->remove(*K_CombBG);
+
   parameters->remove(*c0);
   parameters->remove(*c1);
 

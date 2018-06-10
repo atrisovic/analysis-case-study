@@ -9,6 +9,8 @@ using namespace std;
 
 // Get the data
 TFile f1("../1_preselection/D2PiMuMuOS.root", "read");
+//TFile f1("/eos/lhcb/user/a/atrisovi/reana-demo-d2pimumu/data/D2PiMuMuOS.root", "read");
+
 RooWorkspace* GetWorkspace(std::string file_location) {
 
   TFile *tf = new TFile("PhiModels.root");
@@ -33,7 +35,7 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
 
   D_MM->setRange("fit_range", 1810,2040);
     
-  RooPlot* frame = D_MM->frame(1810,2040, 100) ;
+  RooPlot* frame = D_MM->frame(1810,2040, 46) ;
   Data->plotOn(frame);
 
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"), Components("CombBG_PDF"), LineColor(4), LineStyle(2));
@@ -42,7 +44,7 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
   Model->plotOn(frame, Range("fit_range"), NormRange("fit_range"));
 
   RooHist* hpull = frame->pullHist();
-  RooPlot* frame_pulls = D_MM->frame(1810,2040, 100) ;
+  RooPlot* frame_pulls = D_MM->frame(1810,2040, 46) ;
   frame_pulls->addPlotable(hpull,"P");
   frame_pulls->SetTitle("");
   //frame_pulls->GetYaxis()->SetTitle("Pulls");
@@ -54,23 +56,31 @@ RooFitResult* Fit_D2Pimumu_Mass( RooRealVar* D_MM, RooRealVar* nSig_Dp, RooRealV
   frame_pulls->GetXaxis()->SetTitle("");
   frame_pulls->GetXaxis()->SetLabelSize(0);
   
-  TLine line1(1810,2,2040,2);
-  line1.SetLineColor(15);
-  line1.SetLineStyle(7); 
-  
-  TLine line2(1810,-2,2040,-2);
-  line2.SetLineColor(15);
-  line2.SetLineStyle(7);
+  //TLine line1(1810,2,2040,2);
+  //line1.SetLineColor(15);
+  //line1.SetLineStyle(7); 
+  //
+  //TLine line2(1810,-2,2040,-2);
+  //line2.SetLineColor(15);
+  //line2.SetLineStyle(7);
 
+
+
+  frame->SetTitle("");
+  frame->GetXaxis()->SetTitle("m(#pi^{+}#mu^{+}#mu^{-}) [MeV/c^{2}]");
+  frame->GetYaxis()->SetTitle("Candidates/(5 MeV/c^{2})");
   
-  TCanvas c("c", "c", 800, 800);
+  TCanvas c("c", "c", 900, 600);
   c.Divide(1,2);
-  TPad* p1=(TPad*)c.cd(1); p1->SetPad(0., 0.21, 1., 1.);
+  //TPad* p1=(TPad*)c.cd(1); p1->SetPad(0., 0.21, 1., 1.);
   frame->Draw();
   
-  frame->SetTitle("Invariant mass of the two muons");
-  TPad* p2=(TPad*)c.cd(2); p2->SetPad(0., 0., 1., 0.2);
-  frame_pulls->Draw(); line1.Draw(); line2.Draw();
+  TLatex *label = new TLatex(0.90,0.8,"LHCb");
+  label->SetTextSize(0.08);
+  label->Draw();
+  
+  //TPad* p2=(TPad*)c.cd(2); p2->SetPad(0., 0., 1., 0.2);
+  //frame_pulls->Draw(); line1.Draw(); line2.Draw();
   c.SaveAs(TString("mass_fits/"+qsq_bin_label+".pdf"));
 
   return FitResult;
@@ -112,8 +122,9 @@ double InvMass_mumu(RooDataSet* Data, int i) {
 }
 
 void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
+  
     // Plot m(mumu)
-    RooPlot* frame = MuMuMass->frame(250,2000,100);
+    RooPlot* frame = MuMuMass->frame(250,2000,46);
     Data->plotOn(frame);
     frame->SetXTitle("m(#mu#mu) [MeV/c^2]");
     frame->SetTitleOffset(1.2, "Y");
@@ -126,6 +137,9 @@ void PlotMuMuMass(RooRealVar* MuMuMass, RooDataSet* Data) {
 
 void OSMassFit() 
 {
+
+  gROOT->ProcessLine(".L lhcbStyle.C");
+
   cout << "Hello there" << endl;
   
   // Limits
@@ -154,7 +168,7 @@ void OSMassFit()
   D2PimumuTree->SetBranchStatus("piplus_PIDK",1);
 
   // Create the dataset variables
-  RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax, "MeV/c^{2}");
+  RooRealVar* D_MM = new RooRealVar("D_MM", "m(D)", MassMin, MassMax);
   RooRealVar* BDT = new RooRealVar("BDT", "BDT", 0.15, 0.25);
   RooRealVar* muplus_PX = new RooRealVar("muplus_PX", "muplus_PX", -1e9, 1e9);
   RooRealVar* muplus_PY = new RooRealVar("muplus_PY", "muplus_PY", -1e9, 1e9);

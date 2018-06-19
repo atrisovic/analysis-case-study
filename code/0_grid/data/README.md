@@ -1,5 +1,16 @@
 # Bookkeeping
 
+## Bookkeeping paths
+
+```
+LHCbCollision11Beam3500GeV-VeloClosed-MagDownRealDataReco14Stripping21r190000000CHARMMDST
+LHCbCollision11Beam3500GeV-VeloClosed-MagUpRealDataReco14Stripping21r190000000CHARMMDST
+LHCbCollision12Beam4000GeV-VeloClosed-MagDownRealDataReco14Stripping2190000000CHARMMDST
+LHCbCollision12Beam4000GeV-VeloClosed-MagUpRealDataReco14Stripping2190000000CHARMMDST
+```
+
+## Open bookkeeping browser
+
 ```
 ( source /lhcb/scripts/lhcb-setup.sh )
 lb-run LHCbDIRAC latest bash -norc
